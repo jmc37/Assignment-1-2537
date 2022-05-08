@@ -1,4 +1,4 @@
-var PORT = process.env.PORT || 5000;
+var port = process.env.PORT || 5000;
 const express = require('express')
 const app = express()
 app.set('view engine', 'ejs');
