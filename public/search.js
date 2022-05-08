@@ -73,14 +73,34 @@ function get_types(){
 // Name
 function get_name(){
     poke_name = $('#name_input').val();
-    console.log(poke_name)
+    $('#history').append(poke_name + '<br>')
+    $.ajax({
+        "url": `https://pokeapi.co/api/v2/pokemon/${poke_name}`,
+        "type": "GET",
+        "success": get_pokemon
+    })
 }
-// Ability
+function get_pokemon(data){
+    main = ''
+    console.log(data)
+    main += `  <div class="img-container"> ${data.name} <br>
+    <a href="/profile/${data.id}">
+    <img src="${data.sprites.other["official-artwork"].front_default}"> 
+    </a>
+    <br>
+    ${data.types[0].type.name} type
+    </div>`
+    jQuery("main").html(main)
+}
+
+
+
+
+// Move
 
 function get_move(){
-    console.log('working')
     move = $('#move_input').val();
-
+    $('#history').append(move+ '<br>')
     $.ajax({
         "url": `https://pokeapi.co/api/v2/move/${move}`,
         "type": "GET",
@@ -115,6 +135,7 @@ function setup() {
     $("#name").click(get_name)
     $('#poke_type').change(() => {
         poke_type =$('#poke_type option:selected').val();
+        $('#history').append(poke_type + '<br>')
         get_Pokemon(poke_type);
     })
 }

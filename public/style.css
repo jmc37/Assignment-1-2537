@@ -68,6 +68,15 @@ footer{
 .icons{
     width: 100%;
 }
+#history{
+    align-self: center;
+    border-style: solid;
+    border-radius: 50px;
+    height: 300px;
+    width: 350px;
+    background-color: white;
+    text-align: center;
+}
 @media only screen and (max-width: 600px) {
     a {
       flex-direction: column;
