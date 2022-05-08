@@ -1,5 +1,6 @@
 poke_type = 'normal'
 to_add = ''
+searched = ''
 // Get pokemon info
 function get_random_pokemon(data) {
     console.log(data)
@@ -36,7 +37,6 @@ async function load_poke_type(data) {
 }
 
 
-
 // Get pokemon with type selected
 function get_Pokemon(poke_type){
     console.log('working')
@@ -71,28 +71,31 @@ function get_types(){
 
 }
 // Name
-function get_name(){
-    poke_name = $('#name_input').val();
-    $('#history').append(poke_name + '<br>')
+function get_name(pokemon){
+    pokemon_name = $('#name_input').val();
     $.ajax({
-        "url": `https://pokeapi.co/api/v2/pokemon/${poke_name}`,
+        "url": `https://pokeapi.co/api/v2/pokemon/${pokemon_name}`,
         "type": "GET",
-        "success": get_pokemon
+        "success": get_pokemon_name
     })
 }
-function get_pokemon(data){
-    main = ''
+function get_pokemon_name(data){
+    poke_name = ''
     console.log(data)
-    main += `  <div class="img-container"> ${data.name} <br>
+    poke_name += `  <div class="img-container"> ${data.name} <br>
     <a href="/profile/${data.id}">
     <img src="${data.sprites.other["official-artwork"].front_default}"> 
     </a>
     <br>
     ${data.types[0].type.name} type
     </div>`
-    jQuery("main").html(main)
+    $("main").html(poke_name)
+    poke_button = `<button onclick="history_return(poke_name)">${pokemon_name}</button>`
 }
 
+function history_return(data){
+    $("main").html(data)
+}
 
 
 
@@ -100,7 +103,8 @@ function get_pokemon(data){
 
 function get_move(){
     move = $('#move_input').val();
-    $('#history').append(move+ '<br>')
+    poke_button = move
+    history();
     $.ajax({
         "url": `https://pokeapi.co/api/v2/move/${move}`,
         "type": "GET",
@@ -129,15 +133,25 @@ async function get_pokemon_move(data) {
     jQuery("main").html(to_add)
 }
 
+function history(){
+    button_text = "<button class='remove_button'>Hide this</button>"
+    styled_output = "<span id='search'>" + poke_button + button_text + '<br>' +"</span>";
+    $('#history').append(styled_output)
+}
+// Removes buttons
+function hide_(){
+    $(this).parent().remove();
+}
 function setup() {
     get_types();
     $("#move").click(get_move)
     $("#name").click(get_name)
     $('#poke_type').change(() => {
-        poke_type =$('#poke_type option:selected').val();
-        $('#history').append(poke_type + '<br>')
-        get_Pokemon(poke_type);
+        poke_button =$('#poke_type option:selected').val();
+        get_Pokemon(poke_button);
+        history();
     })
+    $('body').on("click", ".remove_button", hide_);
 }
 
 jQuery(document).ready(setup)

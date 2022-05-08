@@ -27,7 +27,7 @@ app.get('/profile/:id', function (req, res) {
 
         https_res.on('end', function () {
             data = JSON.parse(data)
-
+            console.log(data)
             hp_ =  data.stats.filter((obj_)=>{
                 return obj_.stat.name == "hp"
             }).map( (obj_2)=> {
@@ -38,7 +38,9 @@ app.get('/profile/:id', function (req, res) {
                 "id": req.params.id,
                 "name": data.name,
                 "img_path": data.sprites.other["official-artwork"]["front_default"],
-                "hp": hp_[0]
+                "hp": hp_[0],
+                "type": data.types[0].type.name,
+                "weight": data.weight
 
 
             });
