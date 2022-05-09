@@ -1,5 +1,4 @@
-var server_port = process.env.YOUR_PORT || process.env.PORT || 5000;
-var server_host = process.env.YOUR_HOST || '0.0.0.0';
+var server_port = process.env.PORT || 5000;
 server.listen(server_port, server_host, function() {
     console.log('Listening on port %d', server_port);
 });
@@ -7,14 +6,11 @@ const express = require('express')
 const app = express()
 app.set('view engine', 'ejs');
 
-app.listen(5000, function (err) {
+app.listen(process.env.PORT || 5000, function (err) {
     if (err)
         console.log(err);
 })   
 
-// app.get('/', function (req, res) {
-//     res.send('<h1> GET request to homepage </h1>')    
-// })
 
 const https = require('https');
 
