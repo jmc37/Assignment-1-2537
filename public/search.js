@@ -167,9 +167,6 @@ function history(){
 function hide_(){
     $(this).parent().remove();
 }
-function clear(){
-    $('.history').html('')
-}
 function setup() {
     get_types();
     $("#move").click(get_move)
@@ -179,7 +176,7 @@ function setup() {
         get_Pokemon(poke_button);
         searched = poke_button
     })
-    $("#clear").click(clear)
+    
     $('body').on("click", ".remove_button", hide_);
 }
 
