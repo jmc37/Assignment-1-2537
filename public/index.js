@@ -12,6 +12,15 @@ function get_random_pokemon(data) {
     </div>`
 
 }
+function openNav() {
+    console.log("called opennav")
+      document.getElementById("myNav").style.height = "100%";
+    }
+    
+    /* Close when someone clicks on the "x" symbol inside the overlay */
+    function closeNav() {
+      document.getElementById("myNav").style.height = "0%";
+    }
 // Display images
 async function loadImages() {
     for (i = 1; i <= 9; i++) { // Nine times
@@ -31,7 +40,7 @@ async function loadImages() {
             to_add += `</div>`
         }
     }
-    jQuery("main").html(to_add)
+    $("main").html(to_add)
 }
 
 function setup() {
