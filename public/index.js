@@ -19,7 +19,7 @@ async function loadImages() {
             to_add += `<div class="clearfix">`
         }
 
-        pokemon_number = Math.floor(Math.random() * 500) + 1;
+        pokemon_number = Math.floor(Math.random() * 898) + 1;
         await $.ajax({
             "url": `https://pokeapi.co/api/v2/pokemon/${pokemon_number}/`,
             "type": "GET",
