@@ -1,7 +1,12 @@
 h1{
     text-align: center;
     font-size: 60px;
+    margin: 0;
+}
+header{
     background-color: red;
+    margin: 0;
+    width: 100%;
 }
 nav{
     background-color: black;
@@ -12,11 +17,15 @@ nav{
     padding: 10px;
     justify-content: space-between;
 }
+body{
+    background-color: lightblue;
+}
 main{
     display: flex;
     flex-direction: column;
     font-size: 35px;
     padding-top: 20px;
+    align-items: center;
 }
 
 a{
@@ -32,6 +41,7 @@ a{
 
 .clearfix{
     display: flex;
+    width: 80%;
     
     /* justify-content:space-around; */
     flex-direction: row;
@@ -47,6 +57,7 @@ a{
     align-content: center;
     width: 100%;
     padding: 10px;
+    background-color: white;
 }
 .center{
     align-content: space-around;
@@ -87,10 +98,22 @@ footer{
 #search{
 padding-top: 20px;
 }
-@media only screen and (max-width: 600px) {
-    a {
+#small{
+width: 50%;
+}
+@media only screen and (max-width: 700px) {
+    .clearfix {
       flex-direction: column;
-      width: 100%;
+      width: 80%;
       display: block;
     }
+    h1{
+        width: 100%;
+        display: block;
+    }
+    a{
+        width: 100%;
+        display: block;
+    }
+
   }

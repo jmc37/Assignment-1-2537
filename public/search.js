@@ -1,10 +1,23 @@
 poke_type = 'normal'
 to_add = ''
 searched = ''
+moves = ''
+past = []
 // Get pokemon info
 function get_random_pokemon(data) {
     console.log(data)
     to_add += `  <div class="img-container"> ${data.name} <br>
+    <a href="/profile/${data.id}">
+    <img src="${data.sprites.other["official-artwork"].front_default}"> 
+    </a>
+    <br>
+    ${data.types[0].type.name} type
+    </div>`
+
+}
+function get_random_pokemon_moves(data) {
+    console.log(data)
+    moves += `  <div class="img-container"> ${data.name} <br>
     <a href="/profile/${data.id}">
     <img src="${data.sprites.other["official-artwork"].front_default}"> 
     </a>
@@ -33,7 +46,9 @@ async function load_poke_type(data) {
             to_add += `</div>`
         }
     }
-    jQuery("main").html(to_add)
+    $("main").html(to_add)
+    poke_button = `<button onclick="history_return(to_add)">${searched}</button>`
+    history();
 }
 
 
@@ -82,7 +97,7 @@ function get_name(pokemon){
 function get_pokemon_name(data){
     poke_name = ''
     console.log(data)
-    poke_name += `  <div class="img-container"> ${data.name} <br>
+    poke_name += `  <div class="img-container" id="small"> ${data.name} <br>
     <a href="/profile/${data.id}">
     <img src="${data.sprites.other["official-artwork"].front_default}"> 
     </a>
@@ -91,6 +106,7 @@ function get_pokemon_name(data){
     </div>`
     $("main").html(poke_name)
     poke_button = `<button onclick="history_return(poke_name)">${pokemon_name}</button>`
+    history();
 }
 
 function history_return(data){
@@ -103,8 +119,7 @@ function history_return(data){
 
 function get_move(){
     move = $('#move_input').val();
-    poke_button = move
-    history();
+    searched = move
     $.ajax({
         "url": `https://pokeapi.co/api/v2/move/${move}`,
         "type": "GET",
@@ -112,25 +127,27 @@ function get_move(){
     })
 }
 async function get_pokemon_move(data) {
-    to_add = ''
+    moves = ''
     console.log("function called")
     for(i = 1; i < data.learned_by_pokemon.length; i ++){
         if (i % 3 == 1) { 
-            to_add += `<div class="clearfix">`
+            moves += `<div class="clearfix">`
         }
 
         await $.ajax({
             "url": `https://pokeapi.co/api/v2/pokemon/${data.learned_by_pokemon[i].name}/`,
             "type": "GET",
-            "success": get_random_pokemon
+            "success": get_random_pokemon_moves
         })
 
 
         if (i % 3 == 0) { // only when i= 3, 6, 9
-            to_add += `</div>`
+            moves += `</div>`
         }
     }
-    jQuery("main").html(to_add)
+    $("main").html(moves)
+    poke_button = `<button onclick="history_return(moves)">${searched}</button>`
+    history();
 }
 
 function history(){
@@ -149,7 +166,7 @@ function setup() {
     $('#poke_type').change(() => {
         poke_button =$('#poke_type option:selected').val();
         get_Pokemon(poke_button);
-        history();
+        searched = poke_button
     })
     $('body').on("click", ".remove_button", hide_);
 }
