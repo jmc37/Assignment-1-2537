@@ -1,7 +1,3 @@
-var server_port = process.env.PORT || 5000;
-server.listen(server_port, server_host, function() {
-    console.log('Listening on port %d', server_port);
-});
 const express = require('express')
 const app = express()
 app.set('view engine', 'ejs');
