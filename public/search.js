@@ -88,10 +88,15 @@ function get_types(){
 // Name
 function get_name(pokemon){
     pokemon_name = $('#name_input').val();
+    
     $.ajax({
         "url": `https://pokeapi.co/api/v2/pokemon/${pokemon_name}`,
         "type": "GET",
-        "success": get_pokemon_name
+        "success": get_pokemon_name,
+        error: function(XMLHttpRequest, textStatus, errorThrown) {
+            alert("Incorrect Input");
+         }
+
     })
 }
 function get_pokemon_name(data){
@@ -123,7 +128,10 @@ function get_move(){
     $.ajax({
         "url": `https://pokeapi.co/api/v2/move/${move}`,
         "type": "GET",
-        "success": get_pokemon_move
+        "success": get_pokemon_move,
+        error: function(XMLHttpRequest, textStatus, errorThrown) {
+            alert("Incorrect Input");
+         }
     })
 }
 async function get_pokemon_move(data) {
@@ -152,12 +160,15 @@ async function get_pokemon_move(data) {
 
 function history(){
     button_text = "<button class='remove_button'>Hide this</button>"
-    styled_output = "<span id='search'>" + poke_button + button_text + '<br>' +"</span>";
-    $('#history').append(styled_output)
+    styled_output = "<span id='search'>" + poke_button + button_text +"</span>";
+    $('.history').append(styled_output)
 }
 // Removes buttons
 function hide_(){
     $(this).parent().remove();
+}
+function clear(){
+    $('.history').html('')
 }
 function setup() {
     get_types();
@@ -168,6 +179,7 @@ function setup() {
         get_Pokemon(poke_button);
         searched = poke_button
     })
+    $("#clear").click(clear)
     $('body').on("click", ".remove_button", hide_);
 }
 

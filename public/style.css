@@ -1,26 +1,33 @@
-h1{
+h1 {
     text-align: center;
     font-size: 60px;
     margin: 0;
 }
-header{
+
+header {
     background-color: red;
     margin: 0;
     width: 100%;
 }
-nav{
+
+nav {
     background-color: black;
     font-size: 40px;
-    font-style:normal;
+    font-style: normal;
     display: flex;
     flex-direction: row;
     padding: 10px;
     justify-content: space-between;
 }
-body{
+
+body {
+    display: flex;
     background-color: lightblue;
+    flex-direction: column;
+
 }
-main{
+
+main {
     display: flex;
     flex-direction: column;
     font-size: 35px;
@@ -28,29 +35,32 @@ main{
     align-items: center;
 }
 
-a{
+a {
     color: white;
     text-decoration: none;
     padding: 15px;
     width: 100%;
 }
-#outer{
+
+#outer {
     display: flex;
     flex-direction: column;
 }
 
-.clearfix{
+.clearfix {
     display: flex;
     width: 80%;
-    
+
     /* justify-content:space-around; */
     flex-direction: row;
 }
+
 #center {
     margin: 0 auto;
     width: 90%;
 }
-.img-container{
+
+.img-container {
     border: solid;
     display: flex;
     flex-direction: column;
@@ -59,29 +69,37 @@ a{
     padding: 10px;
     background-color: white;
 }
-.center{
+
+.center {
     align-content: space-around;
 }
-img{
+
+img {
     width: 100%;
     border-radius: 10%;
 }
-article{
+
+article {
     display: flex;
     justify-content: space-around;
 }
-footer{
+
+footer {
     text-align: center;
-    
+   
+
 }
-#icons{
+
+#icons {
     display: flex;
     justify-content: center;
 }
-.icons{
+
+.icons {
     width: 100%;
 }
-#history{
+
+#history {
     align-self: center;
     border-style: solid;
     border-radius: 50px;
@@ -90,30 +108,49 @@ footer{
     background-color: white;
     text-align: center;
 }
-#history_container{
+
+.history {
+    width: 150px;
+    background-color: white;
+    height: 60px;
+    overflow: scroll;
+}
+
+#search_bar {
+    height: 20px;
     display: flex;
-    flex-direction: column;
-    align-content: flex-start;
+    padding-top: 20px;
+    padding-bottom: 20px;
+    justify-content: center;
 }
-#search{
-padding-top: 20px;
+
+#small {
+    width: 50%;
 }
-#small{
-width: 50%;
-}
+
 @media only screen and (max-width: 700px) {
     .clearfix {
-      flex-direction: column;
-      width: 80%;
-      display: block;
-    }
-    h1{
-        width: 100%;
+        flex-direction: column;
+        width: 80%;
         display: block;
+        padding-top: 20px;
     }
-    a{
+
+    h1 {
         width: 100%;
         display: block;
     }
 
-  }
+    a {
+        width: 100%;
+        display: block;
+    }
+
+    #search {
+        flex-direction: column;
+    }
+
+    .history {
+        width: 100%;
+    }
+}
