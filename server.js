@@ -78,20 +78,7 @@ app.get('/move/:id', function (req, res) {
             res.send(data)
         })
 })
-app.get('/types/:id', function (req, res) {
-    pokeModel.find({
-        "types.type.name": req.params.id
-        },
-        function (err, data) {
-            if (err) {
-                console.log("Error" + err);
-            } else {
-                console.log("Data" + data);
-            }
-            console.log(data)
-            res.send(data)
-        })
-})
+
 app.get('/names/:id', function (req, res) {
     pokeModel.find({
         name: req.params.id
