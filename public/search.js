@@ -32,16 +32,12 @@ async function load_poke_type(data) {
     console.log(data)
     to_add = ''
     console.log("function called")
-    for(i = 1; i < data.length; i ++){
+    for(i = 0; i < data.length; i ++){
         if (i % 3 == 1) { 
             to_add += `<div class="clearfix">`
         }
 
-        await $.ajax({
-            "url": `https://localhost:5000/pokemon/${data.pokemon[i].pokemon.name}/`,
-            "type": "GET",
-            "success": get_random_pokemon
-        })
+        get_random_pokemon(data[i])
 
 
         if (i % 3 == 0) { // only when i= 3, 6, 9
@@ -58,28 +54,20 @@ async function load_poke_type(data) {
 function get_Pokemon(poke_type){
     console.log('working')
     $.ajax({
-        "url": `http://localhost:5000/types/${poke_type}`,
+        "url": `https://bcit-pokedex.herokuapp.com/types/${poke_type}`,
         "type": "GET",
         "success": load_poke_type
     })
 
 }
-function get_types(){
-    console.log('working')
-    $.ajax({
-        "url": `https://pokeapi.co/api/v2/type`,
-        "type": "GET",
-        "success": loadtypes
-    })
 
-}
 
 // Name
 function get_name(pokemon){
     pokemon_name = $('#name_input').val();
     addNewEvent(pokemon_name)
     $.ajax({
-        "url": `http://localhost:5000/names/${pokemon_name}`,
+        "url": `https://bcit-pokedex.herokuapp.com/names/${pokemon_name}`,
         "type": "GET",
         "success": get_pokemon_name,
         error: function(XMLHttpRequest, textStatus, errorThrown) {
@@ -91,6 +79,7 @@ function get_name(pokemon){
 function get_pokemon_name(data){
     poke_name = ''
     console.log(data)
+    data = data[0]
     poke_name += `  <div class="img-container" id="small"> ${data.name} <br>
     <a href="/profile/${data.id}">
     <img src="${data.sprites.other["official-artwork"].front_default}"> 
@@ -114,7 +103,7 @@ function get_move(){
     addNewEvent(move)
     searched = move
     $.ajax({
-        "url": `https://pokeapi.co/api/v2/move/${move}`,
+        "url": `https://bcit-pokedex.herokuapp.com/move/${move}`,
         "type": "GET",
         "success": get_pokemon_move,
         error: function(XMLHttpRequest, textStatus, errorThrown) {
@@ -125,16 +114,12 @@ function get_move(){
 async function get_pokemon_move(data) {
     moves = ''
     console.log("function called")
-    for(i = 1; i < data.learned_by_pokemon.length; i ++){
+    for(i = 0; i < data.length; i ++){
         if (i % 3 == 1) { 
             moves += `<div class="clearfix">`
         }
 
-        await $.ajax({
-            "url": `https://pokeapi.co/api/v2/pokemon/${data.learned_by_pokemon[i].name}/`,
-            "type": "GET",
-            "success": get_random_pokemon_moves
-        })
+        get_random_pokemon_moves(data[i])
 
 
         if (i % 3 == 0) { // only when i= 3, 6, 9
@@ -161,7 +146,7 @@ function clear(){
 }
 function addNewEvent(poke_type){
     $.ajax({
-        url: "http://localhost:5000/timeline/insert",
+        url: "https://bcit-pokedex.herokuapp.com/timeline/insert",
         type: "put",
         data: {
             text: `Client has searched for ${poke_type}`,

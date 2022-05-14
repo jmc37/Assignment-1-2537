@@ -27,7 +27,10 @@ const pokeschema = new mongoose.Schema({
     id: Number,
     abilities: Array,
     name: String,
-    types: [Object]
+    types: Array,
+    type: String,
+    moves: Array,
+    move: Object,
 });
 
 const pokeModel = mongoose.model("pokemon", pokeschema);
@@ -49,6 +52,35 @@ app.get('/index/:id', function (req, res) {
 })
 app.get('/types/:id', function (req, res) {
     pokeModel.find({
+        "types.type.name": req.params.id
+        },
+        function (err, data) {
+            if (err) {
+                console.log("Error" + err);
+            } else {
+                console.log("Data" + data);
+            }
+            console.log(data)
+            res.send(data)
+        })
+})
+app.get('/move/:id', function (req, res) {
+    pokeModel.find({
+        "moves.move.name": req.params.id
+        },
+        function (err, data) {
+            if (err) {
+                console.log("Error" + err);
+            } else {
+                console.log("Data" + data);
+            }
+            console.log(req.params.id)            
+            res.send(data)
+        })
+})
+app.get('/types/:id', function (req, res) {
+    pokeModel.find({
+        "types.type.name": req.params.id
         },
         function (err, data) {
             if (err) {
