@@ -35,7 +35,7 @@ const pokeModel = mongoose.model("pokemon", pokeschema);
 app.get('/index/:id', function (req, res) {
     console.log(req.params.id)
     pokeModel.find({
-            types: req.params.id
+            id: req.params.id
         },
         function (err, data) {
             if (err) {
@@ -47,10 +47,22 @@ app.get('/index/:id', function (req, res) {
             res.send(data)
         })
 })
-app.get('/types/:id', function (req, res) {
-    console.log(req.params.id)
+app.get('/types/', function (req, res) {
     pokeModel.find({
-            types: req.params.id
+        },
+        function (err, data) {
+            if (err) {
+                console.log("Error" + err);
+            } else {
+                console.log("Data" + data);
+            }
+            console.log(data)
+            res.send(data)
+        })
+})
+app.get('/names/:id', function (req, res) {
+    pokeModel.find({
+        name: req.params.id
         },
         function (err, data) {
             if (err) {
@@ -161,11 +173,11 @@ app.get('/profile/:id', function (req, res) {
 pokeModel.find({id: req.params.id}, function(err,data){
    data = JSON.parse(JSON.stringify(data[0]))
         console.log(data)
-        hp_ =  data.stats.filter((obj_)=>{
-            return obj_.stat.name == "hp"
-        }).map( (obj_2)=> {
-            return obj_2.base_stat
-        })
+        // hp_ =  data.stats.filter((obj_)=>{
+        //     return obj_.stat.name == "hp"
+        // }).map( (obj_2)=> {
+        //     return obj_2.base_stat
+        // })
         console.log(hp_)
         res.render("profile.ejs", {
             "id": req.params.id,

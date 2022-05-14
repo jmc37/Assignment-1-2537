@@ -23,7 +23,7 @@ async function loadImages() {
 
         pokemon_number = Math.floor(Math.random() * 30) + 1;
         await $.ajax({
-            "url": `http://localhost:5000/index/${pokemon_number}/`,
+            "url": `https://bcit-pokedex.herokuapp.com/index/${pokemon_number}/`,
             "type": "GET",
             "success": get_random_pokemon
         })
