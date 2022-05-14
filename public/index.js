@@ -3,24 +3,17 @@ to_add = ''
 // Get pokemon info
 function get_random_pokemon(data) {
     console.log(data)
+    data = data[0]
     to_add += `  <div class="img-container"> ${data.name} <br>
     <a href="/profile/${data.id}">
     <img src="${data.sprites.other["official-artwork"].front_default}"> 
     </a>
     <br>
-    ${data.types[0].type.name} type
+    Type: ${data.types[0].type.name}
     </div>`
 
 }
-function openNav() {
-    console.log("called opennav")
-      document.getElementById("myNav").style.height = "100%";
-    }
-    
-    /* Close when someone clicks on the "x" symbol inside the overlay */
-    function closeNav() {
-      document.getElementById("myNav").style.height = "0%";
-    }
+
 // Display images
 async function loadImages() {
     for (i = 1; i <= 9; i++) { // Nine times
@@ -28,9 +21,9 @@ async function loadImages() {
             to_add += `<div class="clearfix">`
         }
 
-        pokemon_number = Math.floor(Math.random() * 898) + 1;
+        pokemon_number = Math.floor(Math.random() * 30) + 1;
         await $.ajax({
-            "url": `https://pokeapi.co/api/v2/pokemon/${pokemon_number}/`,
+            "url": `http://localhost:5000/index/${pokemon_number}/`,
             "type": "GET",
             "success": get_random_pokemon
         })

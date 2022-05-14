@@ -1,0 +1,24 @@
+body{
+    background-image: url(https://external-preview.redd.it/EG7bjGp5PDvZ8golrKh3m84n-A9khC5jDE-hqqoVfvA.png?format=pjpg&auto=webp&s=3d441c3774c597cd0136e9634303ef86c0d8677a);
+    background-repeat: no-repeat;
+  background-attachment: fixed;
+  background-size: cover;
+}
+main {
+    background-color: grey;
+    margin-left: 30px;
+    margin-top: 60px;
+    width: 400px;
+    height: 500px;
+    background-color: lightgrey;
+    overflow: scroll;
+}
+h1{
+    color: orange;
+    text-align: center;
+}
+@media only screen and (max-width: 700px) {
+    main{
+        width: 60%;
+    }
+}

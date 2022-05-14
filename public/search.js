@@ -2,6 +2,7 @@ poke_type = 'normal'
 to_add = ''
 searched = ''
 moves = ''
+var now = new Date(Date.now());
 past = []
 // Get pokemon info
 function get_random_pokemon(data) {
@@ -28,15 +29,16 @@ function get_random_pokemon_moves(data) {
 }
 // Display pokemon
 async function load_poke_type(data) {
+    console.log(data)
     to_add = ''
     console.log("function called")
-    for(i = 1; i < data.pokemon.length; i ++){
+    for(i = 1; i < data.length; i ++){
         if (i % 3 == 1) { 
             to_add += `<div class="clearfix">`
         }
 
         await $.ajax({
-            "url": `https://pokeapi.co/api/v2/pokemon/${data.pokemon[i].pokemon.name}/`,
+            "url": `https://localhost:5000/pokemon/${data.pokemon[i].pokemon.name}/`,
             "type": "GET",
             "success": get_random_pokemon
         })
@@ -56,41 +58,20 @@ async function load_poke_type(data) {
 function get_Pokemon(poke_type){
     console.log('working')
     $.ajax({
-        "url": `https://pokeapi.co/api/v2/type/${poke_type}`,
+        "url": `http://localhost:5000/types/${poke_type}`,
         "type": "GET",
         "success": load_poke_type
     })
 
 }
 
-// Populates Type Search Options
-function loadtypes(data){
-    types = ''
 
-    for(i = 0; i < data.results.length; i ++){
-        types += `<option value="${data.results[i].name}">${data.results[i].name}</option>`
-        types += '<br>'
-    }
-    console.log(types)
-    $('#poke_type').html(types)
-}
-
-// Get's pokemon that are the same type
-function get_types(){
-    console.log('working')
-    $.ajax({
-        "url": `https://pokeapi.co/api/v2/type`,
-        "type": "GET",
-        "success": loadtypes
-    })
-
-}
 // Name
 function get_name(pokemon){
     pokemon_name = $('#name_input').val();
-    
+    addNewEvent(pokemon_name)
     $.ajax({
-        "url": `https://pokeapi.co/api/v2/pokemon/${pokemon_name}`,
+        "url": `http://pokeapi.co/api/v2/pokemon/${pokemon_name}`,
         "type": "GET",
         "success": get_pokemon_name,
         error: function(XMLHttpRequest, textStatus, errorThrown) {
@@ -124,6 +105,7 @@ function history_return(data){
 
 function get_move(){
     move = $('#move_input').val();
+    addNewEvent(move)
     searched = move
     $.ajax({
         "url": `https://pokeapi.co/api/v2/move/${move}`,
@@ -171,14 +153,27 @@ function hide_(){
 function clear(){
     $('.history').html(" ")
 }
+function addNewEvent(poke_type){
+    $.ajax({
+        url: "http://localhost:5000/timeline/insert",
+        type: "put",
+        data: {
+            text: `Client has searched for ${poke_type}`,
+            hits: 1,
+            time: now,
+        },
+        success: (res)=>{console.log('worked')}
+    })
+}
 function setup() {
-    get_types();
     $("#move").click(get_move)
     $("#name").click(get_name)
     $('#poke_type').change(() => {
         poke_button =$('#poke_type option:selected').val();
+        addNewEvent(poke_button);
         get_Pokemon(poke_button);
-        searched = poke_button
+        searched = poke_button;
+        
     })
     $("#clear").click(clear)
 
