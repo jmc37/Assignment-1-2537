@@ -33,14 +33,14 @@ async function load_poke_type(data) {
     to_add = ''
     console.log("function called")
     for(i = 0; i < data.length; i ++){
-        if (i % 3 == 1) { 
+        if (i % 3 == 0) { 
             to_add += `<div class="clearfix">`
         }
 
         get_random_pokemon(data[i])
 
 
-        if (i % 3 == 0) { // only when i= 3, 6, 9
+        if (i % 3 == 2) { // only when i= 3, 6, 9
             to_add += `</div>`
         }
     }
@@ -115,14 +115,14 @@ async function get_pokemon_move(data) {
     moves = ''
     console.log("function called")
     for(i = 0; i < data.length; i ++){
-        if (i % 3 == 1) { 
+        if (i % 3 == 0) { 
             moves += `<div class="clearfix">`
         }
 
         get_random_pokemon_moves(data[i])
 
 
-        if (i % 3 == 0) { // only when i= 3, 6, 9
+        if (i % 3 == 2) { // only when i= 3, 6, 9
             moves += `</div>`
         }
     }
