@@ -7,7 +7,7 @@ body{
 main {
     background-color: grey;
     margin-left: 30px;
-    margin-top: 60px;
+    margin-top: 170px;
     width: 400px;
     height: 500px;
     background-color: lightgrey;
@@ -16,6 +16,12 @@ main {
 h1{
     color: orange;
     text-align: center;
+}
+button{
+    size: 20px;
+    padding: 25px;
+    margin-top: 10px;
+    margin-left: 100px;
 }
 @media only screen and (max-width: 700px) {
     main{
