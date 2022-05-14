@@ -1,7 +1,7 @@
 function loadEventsToMainDiv() {
     $('main').empty();
     $.ajax({
-        url: "http://localhost:5000/timeline/getAllEvents",
+        url: "https://bcit-pokedex.herokuapp.com/timeline/getAllEvents",
         type: "get",
         data: "",
         success: (r) => {
