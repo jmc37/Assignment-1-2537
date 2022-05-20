@@ -1,9 +1,10 @@
+
 poke_type = 'normal'
 to_add = ''
 searched = ''
 moves = ''
-var now = new Date(Date.now());
 past = []
+var now = new Date(Date.now());
 // Get pokemon info
 function get_random_pokemon(data) {
     console.log(data)
@@ -29,18 +30,21 @@ function get_random_pokemon_moves(data) {
 }
 // Display pokemon
 async function load_poke_type(data) {
-    console.log(data)
     to_add = ''
     console.log("function called")
-    for(i = 0; i < data.length; i ++){
-        if (i % 3 == 0) { 
+    for(i = 1; i < data.pokemon.length; i ++){
+        if (i % 3 == 1) { 
             to_add += `<div class="clearfix">`
         }
 
-        get_random_pokemon(data[i])
+        await $.ajax({
+            "url": `https://pokeapi.co/api/v2/pokemon/${data.pokemon[i].pokemon.name}/`,
+            "type": "GET",
+            "success": get_random_pokemon
+        })
 
 
-        if (i % 3 == 2) { // only when i= 3, 6, 9
+        if (i % 3 == 0) { // only when i= 3, 6, 9
             to_add += `</div>`
         }
     }
@@ -54,20 +58,41 @@ async function load_poke_type(data) {
 function get_Pokemon(poke_type){
     console.log('working')
     $.ajax({
-        "url": `https://bcit-pokedex.herokuapp.com/types/${poke_type}`,
+        "url": `https://pokeapi.co/api/v2/type/${poke_type}`,
         "type": "GET",
         "success": load_poke_type
     })
 
 }
 
+// Populates Type Search Options
+function loadtypes(data){
+    types = ''
 
+    for(i = 0; i < data.results.length; i ++){
+        types += `<option value="${data.results[i].name}">${data.results[i].name}</option>`
+        types += '<br>'
+    }
+    console.log(types)
+    $('#poke_type').html(types)
+}
+
+// Get's pokemon that are the same type
+function get_types(){
+    console.log('working')
+    $.ajax({
+        "url": `https://pokeapi.co/api/v2/type`,
+        "type": "GET",
+        "success": loadtypes
+    })
+
+}
 // Name
 function get_name(pokemon){
     pokemon_name = $('#name_input').val();
     addNewEvent(pokemon_name)
     $.ajax({
-        "url": `https://bcit-pokedex.herokuapp.com/names/${pokemon_name}`,
+        "url": `https://pokeapi.co/api/v2/pokemon/${pokemon_name}`,
         "type": "GET",
         "success": get_pokemon_name,
         error: function(XMLHttpRequest, textStatus, errorThrown) {
@@ -79,7 +104,6 @@ function get_name(pokemon){
 function get_pokemon_name(data){
     poke_name = ''
     console.log(data)
-    data = data[0]
     poke_name += `  <div class="img-container" id="small"> ${data.name} <br>
     <a href="/profile/${data.id}">
     <img src="${data.sprites.other["official-artwork"].front_default}"> 
@@ -96,6 +120,8 @@ function history_return(data){
     $("main").html(data)
 }
 
+
+
 // Move
 
 function get_move(){
@@ -103,7 +129,7 @@ function get_move(){
     addNewEvent(move)
     searched = move
     $.ajax({
-        "url": `https://bcit-pokedex.herokuapp.com/move/${move}`,
+        "url": `https://pokeapi.co/api/v2/move/${move}`,
         "type": "GET",
         "success": get_pokemon_move,
         error: function(XMLHttpRequest, textStatus, errorThrown) {
@@ -114,15 +140,19 @@ function get_move(){
 async function get_pokemon_move(data) {
     moves = ''
     console.log("function called")
-    for(i = 0; i < data.length; i ++){
-        if (i % 3 == 0) { 
+    for(i = 1; i < data.learned_by_pokemon.length; i ++){
+        if (i % 3 == 1) { 
             moves += `<div class="clearfix">`
         }
 
-        get_random_pokemon_moves(data[i])
+        await $.ajax({
+            "url": `https://pokeapi.co/api/v2/pokemon/${data.learned_by_pokemon[i].name}/`,
+            "type": "GET",
+            "success": get_random_pokemon_moves
+        })
 
 
-        if (i % 3 == 2) { // only when i= 3, 6, 9
+        if (i % 3 == 0) { // only when i= 3, 6, 9
             moves += `</div>`
         }
     }
@@ -146,7 +176,7 @@ function clear(){
 }
 function addNewEvent(poke_type){
     $.ajax({
-        url: "https://bcit-pokedex.herokuapp.com/timeline/insert",
+        url: "http://localhost:5000/timeline/insert/",
         type: "put",
         data: {
             text: `Client has searched for ${poke_type}`,
@@ -157,14 +187,14 @@ function addNewEvent(poke_type){
     })
 }
 function setup() {
+    get_types();
     $("#move").click(get_move)
     $("#name").click(get_name)
     $('#poke_type').change(() => {
         poke_button =$('#poke_type option:selected').val();
         addNewEvent(poke_button);
         get_Pokemon(poke_button);
-        searched = poke_button;
-        
+        searched = poke_button
     })
     $("#clear").click(clear)
 
