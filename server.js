@@ -1,8 +1,83 @@
 const express = require('express')
 const app = express()
+var session = require('express-session')
 const https = require('https');
 app.set('view engine', 'ejs');
 
+// Use session middleware
+app.use(session({
+    secret: 'ssshh',
+    saveUninitialized: true,
+    resave: true
+}));
+
+
+users = [{
+        username: "user1",
+        password: "pass1",
+        shoppingCart: [{
+                pokeID: 25,
+                quantity: 2,
+                price: 32
+            },
+            {
+                pokeID: 21,
+                quantity: 4,
+                price: 16
+            }
+        ]
+    },
+    {
+        username: "user2",
+        password: "pass2"
+    },
+]
+
+function logger1(x, y, next) {
+    console.log('logger1 function got executed')
+    next()
+}
+// how you declare a middleware
+app.use(logger1)
+
+function auth(req, res, next) {
+    if (req.session.authenticated)
+        next()
+    else {
+        res.redirect('/login')
+    }
+}
+app.get('/userProfile/:name', function (req, res) {
+    res.write(`Welcome ${req.params.name}`)
+    res.write(`<br>`)
+    // console.log(users.filter( user => user.username == req.params.name))
+    res.write(JSON.stringify(
+        users.filter(user => user.username == req.params.name)[0].shoppingCart[0]
+    ))
+    res.send()
+})
+app.get('/', auth, function (req, res) {
+    console.log("/ route got accessed!")
+    res.send(`Welcome <a href="/userProfile/${req.session.user}"> ${req.session.user} </a>`)
+
+
+})
+app.get('/login/', function (req, res, next) {
+    res.status(400)
+    res.send("please provide the credentials through the url")
+})
+
+app.get('/login/:user/:pass', function (req, res, next) {
+    if (users.filter(user => user.username == req.params.user)[0].password == req.params.pass) {
+
+        req.session.authenticated = true
+        req.session.user = req.params.user
+        res.send("succesful login!")
+    } else {
+        req.session.authenticated = false
+        res.send('failed login')
+    }
+})
 app.listen(process.env.PORT || 5000, function (err) {
     if (err)
         console.log(err);
@@ -52,7 +127,7 @@ app.get('/index/:id', function (req, res) {
 })
 app.get('/types/:id', function (req, res) {
     pokeModel.find({
-        "types.type.name": req.params.id
+            "types.type.name": req.params.id
         },
         function (err, data) {
             if (err) {
@@ -66,7 +141,7 @@ app.get('/types/:id', function (req, res) {
 })
 app.get('/move/:id', function (req, res) {
     pokeModel.find({
-        "moves.move.name": req.params.id
+            "moves.move.name": req.params.id
         },
         function (err, data) {
             if (err) {
@@ -74,14 +149,14 @@ app.get('/move/:id', function (req, res) {
             } else {
                 console.log("Data" + data);
             }
-            console.log(req.params.id)            
+            console.log(req.params.id)
             res.send(data)
         })
 })
 
 app.get('/names/:id', function (req, res) {
     pokeModel.find({
-        name: req.params.id
+            name: req.params.id
         },
         function (err, data) {
             if (err) {
@@ -189,26 +264,33 @@ app.get('/timeline/increasehits/:id', function (req, res) {
 })
 
 app.get('/profile/:id', function (req, res) {
-pokeModel.find({id: req.params.id}, function(err,data){
-   data = JSON.parse(JSON.stringify(data[0]))
-        console.log(data)
-        hp_ =  data.stats.filter((obj_)=>{
-            return obj_.stat.name == "hp"
-        }).map( (obj_2)=> {
-            return obj_2.base_stat
+    const url = `https://pokeapi.co/api/v2/pokemon/${req.params.id}`
+
+    https.get(url, function (https_res) {
+        data = '';
+        https_res.on("data", function (chunk) {
+            data += chunk
         })
-        console.log(hp_)
-        res.render("profile.ejs", {
-            "id": req.params.id,
-            "name": data.name,
-            "img_path": data.sprites.other["official-artwork"]["front_default"],
-            "hp": hp_[0],
-            "type": data.types[0].type.name,
-            "weight": data.weight
+
+        https_res.on('end', function () {
+            data = JSON.parse(data)
+
+            hp_ = data.stats.filter((obj_) => {
+                return obj_.stat.name == "hp"
+            }).map((obj_2) => {
+                return obj_2.base_stat
+            })
+            console.log(hp_)
+            res.render("profile.ejs", {
+                "id": req.params.id,
+                "name": data.name,
+                "img_path": data.sprites.other["official-artwork"]["front_default"],
+                "hp": hp_[0]
 
 
-        });
-    });
+            });
+        })
+    })
 })
 
 
