@@ -44,8 +44,7 @@ function auth(req, res, next) {
     if (req.session.authenticated)
         next()
     else {
-        res.redirect('/login')
-    }
+        res.sendFile(__dirname + '/public/pages/login.html')    }
 }
 app.get('/userProfile/:name', function (req, res) {
     res.write(`Welcome ${req.params.name}`)
@@ -293,7 +292,55 @@ app.get('/profile/:id', function (req, res) {
     })
 })
 
+const usersSchema = new mongoose.Schema({
+    user_id: String,
+    username: String,
+    password: String,
+    cart: [Object],
+    past_orders: [
+        [Object]
+    ],
+    timeline: [Object]
+}, {
+    collection: 'users'
+})
 
+const usersModel = mongoose.model("users", usersSchema);
 
+app.get('/login', (req, res) => {
+    // If they're authenticated, send them to their profile, otherwise send them to the login page
+    if (req.session.authenticated) {
+        res.redirect('/profile')
+    } else {
+        res.sendFile(__dirname + '/public/pages/login.html')
+    }
+})
 
+function authenticate(req, res, next) {
+    if (req.session.authenticated) {
+        next()
+    } else {
+        res.redirect('/login')
+    }
+}
+
+app.post('/login', async (req, res) => {
+    await authenticateLogin(req.body.username, req.body.password).then(user => {
+        req.session.user = user
+    })
+    req.session.authenticated = req.session.user != null
+    res.json({
+        success: req.session.authenticated,
+        user: req.session.user,
+        message: req.session.authenticated ? "Authentication success." : "Authentication failed."
+    })
+})
+
+async function authenticateLogin(username, password) {
+    const users = await usersModel.find({
+        username: username,
+        password: password
+    })
+    return users[0]
+}
 app.use(express.static('./public'));
