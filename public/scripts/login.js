@@ -38,13 +38,4 @@
     })
   }
   
-//   $("#logout").click(function() {
-//     $.ajax({
-//       type: "get",
-//       url: 'http://localhost:5000/logout',
-//       success: function (x){
-//         console.log(x);
-//         window.location.href = 'http://localhost:5000';
-//       }
-//     })
-//   })
+ 

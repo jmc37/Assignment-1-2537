@@ -2,7 +2,7 @@ subtotal = 0
 total = (subtotal * 1000) * 1.15
 function get_user() {
     $.ajax({
-            "url": 'http://localhost:5000/userinfo/',
+            "url": 'https://bcit-pokedex.herokuapp.com/userinfo/',
             "type": "GET",
             success: (r) => {
                 console.log(r)
@@ -34,7 +34,17 @@ function get_user() {
 
 
 
-
+    function logout() {
+        console.log('called')
+        $.ajax({
+          type: "get",
+          url: 'https://bcit-pokedex.herokuapp.com/logout',
+          success: function (x){
+            console.log(x);
+            window.location.href = 'https://bcit-pokedex.herokuapp.com';
+          }
+        })
+      }
     function setup() {
         get_user();
 

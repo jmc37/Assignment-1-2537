@@ -203,7 +203,7 @@ function addNewEvent(poke_type){
 }
 function addPokemon(pokemon){
     $.ajax({
-        url: "http://localhost:5000/cart/insert/",
+        url: "https://bcit-pokedex.herokuapp.com/cart/insert/",
         type: "put",
         data: {
             text: pokemon,
@@ -218,7 +218,7 @@ function addPokemon(pokemon){
 function addCartItem(){
     x = this.id 
     $.ajax({
-        url: `http://localhost:5000/cart/add/${x}`,
+        url: `https://bcit-pokedex.herokuapp.com/cart/add/${x}`,
         type: "get",
         success: alert(`Added ${x} to cart`)
     })

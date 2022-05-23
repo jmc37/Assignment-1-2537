@@ -1,7 +1,7 @@
 function loadEventsToMainDiv() {
     $('main').empty();
     $.ajax({
-        url: "http://localhost:5000/timeline/getAllEvents",
+        url: "https://bcit-pokedex.herokuapp.com/timeline/getAllEvents",
         type: "get",
         data: "",
         success: (r) => {
@@ -24,7 +24,7 @@ function loadEventsToMainDiv() {
 function increaseHits(){
     x = this.id
     $.ajax({
-        url: `http://localhost:5000/timeline/increasehits/${x}`,
+        url: `https://bcit-pokedex.herokuapp.com/increasehits/${x}`,
         type: "get",
         success: function (x){
             console.log(x)
@@ -35,7 +35,7 @@ function increaseHits(){
 function deleteID(){
     x = this.id
     $.ajax({
-        url: `http://localhost:5000/timeline/delete/${x}`,
+        url: `https://bcit-pokedex.herokuapp.com/delete/${x}`,
         type: "get",
         success: function (x){
             console.log(x)

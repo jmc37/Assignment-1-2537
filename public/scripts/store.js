@@ -91,7 +91,7 @@ function deleteItems() {
     x = this.id
     console.log(x)
     $.ajax({
-        url: `http://localhost:5000/cart/RemoveItems/${x}`,
+        url: `https://bcit-pokedex.herokuapp.com/cart/RemoveItems/${x}`,
         type: "GET",
         success: function (r) {
             console.log(r)
@@ -108,10 +108,13 @@ function deleteItems() {
 function order(){
     console.log('function called')
     $.ajax({
-        url: `http://localhost:5000/orders/send`,
+        url: `https://bcit-pokedex.herokuapp.com/orders/send`,
         type: "put",
-        success: console.log('sucess')
+        success: alert("Purchase Complete")
+        
     })
+    location.reload();
+
 }
 function setup() {
     showCartItems()
