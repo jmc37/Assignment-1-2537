@@ -1,5 +1,4 @@
 to_add = ''
-
 // Get pokemon info
 function get_random_pokemon(data) {
     console.log(data)
@@ -9,6 +8,7 @@ function get_random_pokemon(data) {
     </a>
     <br>
     Type: ${data.types[0].type.name}
+    <button class="add-cart" id="${data.name}">Add to Cart</button>
     </div>`
 
 }
@@ -35,8 +35,51 @@ async function loadImages() {
     $("main").html(to_add)
 }
 
+function getAllPokemons(){
+    $.ajax({
+        "url": `https://pokeapi.co/api/v2/pokemon?limit=100000&offset=0`,
+        "type": "GET",
+        "success": generateAllPokemons
+    })
+}
+
+function getRandomPokemons(randomPokeName){
+    $.ajax({
+        "url": `https://pokeapi.co/api/v2/pokemon/${randomPokeName}`,
+        "type": "GET",
+        "success": displayRandomPokemons
+    })
+}
+
+function CartAddition(data){
+    console.log("This ran")
+    console.log(data)
+}
+
+function addCartItem(){
+    x = this.id 
+    $.ajax({
+        url: `http://localhost:5000/cart/add/${x}`,
+        type: "get",
+        success: CartAddition
+    })
+}
+function viewCart(){
+    console.log("this was called")
+    $.ajax({
+        url: "http://localhost:5000/cart",
+        type:"get",
+        success: function(x){
+            console.log(x)
+        }
+    })
+}
+
+
 function setup() {
     loadImages();
+    $('#viewCart').click(viewCart)
+    $(document).on("click", ".add-cart", addCartItem)
     
 }
 

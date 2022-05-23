@@ -14,6 +14,7 @@ function get_random_pokemon(data) {
     </a>
     <br>
     ${data.types[0].type.name} type
+    <button class="add-cart" id="${data.name}">Add to Cart</button>
     </div>`
 
 }
@@ -25,6 +26,7 @@ function get_random_pokemon_moves(data) {
     </a>
     <br>
     ${data.types[0].type.name} type
+    <button class="add-cart" id="${data.name}">Add to Cart</button>
     </div>`
 
 }
@@ -110,6 +112,7 @@ function get_pokemon_name(data){
     </a>
     <br>
     ${data.types[0].type.name} type
+    <button class="add-cart" id="${data.name}">Add to Cart</button>
     </div>`
     $("main").html(poke_name)
     poke_button = `<button onclick="history_return(poke_name)">${pokemon_name}</button>`
@@ -186,6 +189,53 @@ function addNewEvent(poke_type){
         success: (res)=>{console.log('worked')}
     })
 }
+function addNewEvent(poke_type){
+    $.ajax({
+        url: "http://localhost:5000/timeline/insert/",
+        type: "put",
+        data: {
+            text: `Client has searched for ${poke_type}`,
+            hits: 1,
+            time: now,
+        },
+        success: (res)=>{console.log('worked')}
+    })
+}
+function addPokemon(pokemon){
+    $.ajax({
+        url: "http://localhost:5000/cart/insert/",
+        type: "put",
+        data: {
+            text: pokemon,
+            hits: 1,
+            time: now,
+        },
+        success: (res)=>{console.log('worked')}
+    })
+}
+function CartAddition(data){
+    console.log("This ran")
+    console.log(data)
+}
+
+function addCartItem(){
+    x = this.id 
+    $.ajax({
+        url: `http://localhost:5000/cart/add/${x}`,
+        type: "get",
+        success: CartAddition
+    })
+}
+function viewCart(){
+    console.log("this was called")
+    $.ajax({
+        url: "http://localhost:5000/cart",
+        type:"get",
+        success: function(x){
+            console.log(x)
+        }
+    })
+}
 function setup() {
     get_types();
     $("#move").click(get_move)
@@ -197,7 +247,7 @@ function setup() {
         searched = poke_button
     })
     $("#clear").click(clear)
-
+    $(document).on("click", ".add-cart", addCartItem)
     $('body').on("click", ".remove_button", hide_);
 }
 

@@ -1,4 +1,5 @@
-    function login() {
+   
+   function login() {
     $.ajax({
       type: "get",
       url: `http://localhost:5000/login/${document.getElementById("uname").value}/${document.getElementById("psw").value}`,

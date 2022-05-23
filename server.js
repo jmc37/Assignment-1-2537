@@ -4,6 +4,18 @@ var session = require('express-session')
 const https = require('https');
 app.set('view engine', 'ejs');
 
+app.listen(process.env.PORT || 5000, function (err) {
+    if (err)
+        console.log(err);
+})
+
+
+const mongoose = require('mongoose');
+mongoose.connect("mongodb+srv://jmc37:Assiuassiu1@cluster0.505xk.mongodb.net/myFirstDatabase?retryWrites=true&w=majority", {
+    useNewUrlParser: true,
+    useUnifiedTopology: true
+})
+
 // Use session middleware
 app.use(session({
     secret: 'ssshh',
@@ -12,74 +24,216 @@ app.use(session({
 }));
 
 
-users = [{
-        username: "user1",
-        password: "pass1",
-        shoppingCart: [{
-                pokeID: 25,
-                quantity: 2,
-                price: 32
-            },
-            {
-                pokeID: 21,
-                quantity: 4,
-                price: 16
-            }
-        ]
-    },
-    {
-        username: "user2",
-        password: "pass2"
-    },
-]
+const accountSchema = new mongoose.Schema({
+    user: String,
+    pass: String,
+    cart: Array,
+    orders: Array,
+    timeline: Array
 
-function logger1(x, y, next) {
-    console.log('logger1 function got executed')
-    next()
-}
-// how you declare a middleware
-app.use(logger1)
+});
+const accountModel = mongoose.model("user", accountSchema);
 
-function auth(req, res, next) {
-    if (req.session.authenticated)
-        next()
+
+// get to cart
+app.get('/cart', function (req, res) {
+    res.sendFile(__dirname + "/public/cart.html");
+  
+})
+
+// add to cart 
+app.get('/cart/add/:name', function (req, res) {
+    accountModel.updateOne({
+        user: req.session.user,
+        pass: req.session.pass,
+    },{
+        $push: {cart:{name: req.params.name, cost: 1000, count: 1}}
+    },function (err, data) {
+        if (err) {
+            console.log("Error " + err);
+        } else {
+            console.log("Data " + data);
+        }
+        res.send("Cart updated");
+    });
+})
+
+//Find Items in the cart document
+
+app.get('/cart/getItems', function (req, res) {
+    accountModel.findOne({
+        user: req.session.user,
+        pass: req.session.pass
+    }, function (err, data) {
+        if (err) {
+            console.log("Error " + err);
+        } else {
+            console.log("Data " + data);
+        }
+        res.send(data);
+    });
+})
+
+// Increase number of item in cart by 1
+
+app.get('/cart/increaseItems/:id', function (req, res) {
+    // console.log(req.body)
+    console.log("Hi")
+    console.log( req.params.id)
+    accountModel.updateOne({
+        user: req.session.user,
+        pass: req.session.pass,
+        "cart.name" : req.params.id
+        // name : req.params.id
+        // "_id": req.params.id
+    },{
+        $inc: {'cart.$.count': 1}
+    } ,function (err, data) {
+        if (err) {
+            console.log("Error " + err);
+        } else {
+            console.log("Data " + data);
+        }
+        res.send(data);
+    });
+})
+
+
+app.get('/cart/decreaseItems/:id', function (req, res) {
+    // console.log(req.body)
+    accountModel.updateOne({
+        user: req.session.user,
+        pass: req.session.pass,
+        "cart.name" : req.params.id
+    },{
+        $inc: {'cart.$.count': -1}
+    } ,function (err, data) {
+        if (err) {
+            console.log("Error " + err);
+        } else {
+            console.log("Data " + data);
+        }
+        res.send("Update request is successful!");
+    });
+})
+
+// Delete item from the Cart
+
+app.get('/cart/RemoveItems/:id', function (req, res) {
+    accountModel.updateOne({
+        user: req.session.user,
+        pass: req.session.pass,
+        
+    },{ $pull:{
+        cart:{
+            name : req.params.id
+        }
+    }
+
+    }, function (err, data) {
+        if (err) {
+            console.log("Error " + err);
+        } else {
+            console.log("Data " + data);
+        }
+        res.send("Delete request is successful!");
+    });
+})
+
+
+
+
+
+// Login
+app.get('/', function (req, res) {
+    if(req.session.authenticated){
+        console.log("Welcome user")
+        res.sendFile(__dirname + "/public/pages/profile.html")
+    }
     else {
-        res.sendFile(__dirname + '/public/pages/login.html')    }
-}
-app.get('/userProfile/:name', function (req, res) {
-    res.write(`Welcome ${req.params.name}`)
-    res.write(`<br>`)
-    // console.log(users.filter( user => user.username == req.params.name))
-    res.write(JSON.stringify(
-        users.filter(user => user.username == req.params.name)[0].shoppingCart[0]
-    ))
-    res.send()
-})
-app.get('/', auth, function (req, res) {
-    console.log("/ route got accessed!")
-    res.send(`Welcome <a href="/userProfile/${req.session.user}"> ${req.session.user} </a>`)
-
-
-})
-app.get('/login/', function (req, res, next) {
-    res.status(400)
-    res.send("please provide the credentials through the url")
-})
-
-app.get('/login/:user/:pass', function (req, res, next) {
-    if (users.filter(user => user.username == req.params.user)[0].password == req.params.pass) {
-
-        req.session.authenticated = true
-        req.session.user = req.params.user
-        res.send("succesful login!")
-    } else {
-        req.session.authenticated = false
-        res.send('failed login')
+        console.log("User needs to login properly")
+        res.sendFile(__dirname + "/public/pages/login.html")
     }
 })
-app.listen(process.env.PORT || 5000, function (err) {
-    if (err)
-        console.log(err);
+
+app.get('/login', function (req, res) {
+    if (req.session.authenticated) {
+        res.render("login.ejs", {
+            "name": req.session.user
+        });
+    } else {
+        res.sendFile(__dirname + "/public/login.html");
+    }
+})
+
+app.get('/login/:user/:pass', function (req, res) {
+    console.log("this went through")
+    let username = req.params.user;
+	let password = req.params.pass;
+    accountModel.findOne({user: username, pass: password, }, function (err, data) {
+        if (err) {
+            console.log("Error " + err);
+        } else {
+            console.log("Data " + data);
+        }
+        if (data) {
+            req.session.authenticated = true;
+            req.session.user = username;
+            req.session.pass = password;
+        }
+        res.send(data);
+    });
+})
+
+app.put('/create/:user/:pass', function (req, res) {
+    let username = req.params.user;
+	let password = req.params.pass;
+   
+    console.log(username, password)
+    accountModel.findOne({
+        user: username,
+        pass: password,
+
+    }, function (err, data) {
+        if (data) {
+            res.send(null);
+        } else {
+            accountModel.create({
+                user: username,
+                pass: password,
+                cart: [],
+                orders: [],
+                timeline: []
+            }, function (err, data) {
+                if (err) {
+                    console.log("Error " + err);
+                } else {
+                    console.log("Data " + data);
+                }
+                res.send(data);
+            });
+        }
+    });
+})
+
+
+app.get('/userinfo', function (req, res) {
+    console.log('called')
+    accountModel.find({
+        user: req.session.user,
+    }, function (err, data) {
+        if (err) {
+            console.log("Error " + err);
+        } else {
+            console.log("Data " + data);
+        }
+        res.send(data);
+    });
+})
+
+app.get('/logout', function (req, res) {
+    req.session.authenticated = false;
+    res.send("Logout succeeded");
 })
 
 app.use(express.static('./public'));
@@ -90,11 +244,6 @@ app.use(bodyparser.urlencoded({
     limit: '50mb',
     extended: true
 }));
-const mongoose = require('mongoose');
-mongoose.connect("mongodb+srv://jmc37:Assiuassiu1@cluster0.505xk.mongodb.net/myFirstDatabase?retryWrites=true&w=majority", {
-    useNewUrlParser: true,
-    useUnifiedTopology: true
-})
 
 
 const pokeschema = new mongoose.Schema({
@@ -178,16 +327,7 @@ const timelineSchema = new mongoose.Schema({
 })
 const timelineModel = mongoose.model("timeline", timelineSchema);
 
-app.get('/', function (req, res) {
-    timelineModel.find({}, function (err, data) {
-        if (err) {
-            console.log("Error" + err);
-        } else {
-            console.log("Data" + data);
-        }
-        res.send(data)
-    })
-})
+
 
 app.get('/timeline/getAllEvents', function (req, res) {
     timelineModel.find({}, function (err, data) {
@@ -292,55 +432,7 @@ app.get('/profile/:id', function (req, res) {
     })
 })
 
-const usersSchema = new mongoose.Schema({
-    user_id: String,
-    username: String,
-    password: String,
-    cart: [Object],
-    past_orders: [
-        [Object]
-    ],
-    timeline: [Object]
-}, {
-    collection: 'users'
-})
 
-const usersModel = mongoose.model("users", usersSchema);
 
-app.get('/login', (req, res) => {
-    // If they're authenticated, send them to their profile, otherwise send them to the login page
-    if (req.session.authenticated) {
-        res.redirect('/profile')
-    } else {
-        res.sendFile(__dirname + '/public/pages/login.html')
-    }
-})
 
-function authenticate(req, res, next) {
-    if (req.session.authenticated) {
-        next()
-    } else {
-        res.redirect('/login')
-    }
-}
-
-app.post('/login', async (req, res) => {
-    await authenticateLogin(req.body.username, req.body.password).then(user => {
-        req.session.user = user
-    })
-    req.session.authenticated = req.session.user != null
-    res.json({
-        success: req.session.authenticated,
-        user: req.session.user,
-        message: req.session.authenticated ? "Authentication success." : "Authentication failed."
-    })
-})
-
-async function authenticateLogin(username, password) {
-    const users = await usersModel.find({
-        username: username,
-        password: password
-    })
-    return users[0]
-}
 app.use(express.static('./public'));
