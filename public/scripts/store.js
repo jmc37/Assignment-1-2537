@@ -1,4 +1,5 @@
 userCart = ''
+subtotal = 0
 
 // catch routes for cart
 function showCartData(data) {
@@ -8,6 +9,9 @@ function showCartData(data) {
     userCart = data.cart
     cartData = ""
     for (i = 0; i < data.cart.length; i++) {
+        subtotal += data.cart[i].cost * data.cart[i].count
+        tax = 0.15 * subtotal
+        total = subtotal + tax
         console.log(data._id)
 
         $("main").append(`
@@ -15,15 +19,23 @@ function showCartData(data) {
             <p> ${data.cart[i].name} </p>
             
             <p> $${data.cart[i].cost} </p>
-            
             <p> Event Hits - ${data.cart[i].count} </p>
             <button class="likeButtons" id="${data.cart[i].name}"> Add more item </button>
             <button class="dislikeButtons" id="${data.cart[i].name}"> Remove 1 item </button>  
             <button class="deleteButtons" id="${data.cart[i].name}"> Delete! </button> 
-            <button class="orderButtons" id="${data.cart[i].name}"> Add to Order! </button> 
         </div>
             `)
     }
+    $("main").append(
+        `
+        <p>Subtotal: ${subtotal}</p>
+        <p>Tax: ${tax}</p>
+        <p>Total: ${total}</p>
+        <button id="Checkout"> Checkout! </button> 
+
+
+    `
+    )
 }
 
 

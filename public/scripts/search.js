@@ -220,7 +220,9 @@ function addCartItem(){
     $.ajax({
         url: `http://localhost:5000/cart/add/${x}`,
         type: "get",
+        success: alert(`Added ${x} to cart`)
     })
+    
 }
 
 function setup() {
