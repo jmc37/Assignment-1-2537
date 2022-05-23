@@ -55,7 +55,7 @@ function getRandomPokemons(randomPokeName){
 function addCartItem(){
     x = this.id 
     $.ajax({
-        url: `http://localhost:5000/cart/add/${x}`,
+        url: `https://bcit-pokedex.herokuapp.com/cart/add/${x}`,
         type: "get",
         success: alert(`Added ${x} to cart`)
     })
