@@ -51,34 +51,18 @@ function getRandomPokemons(randomPokeName){
     })
 }
 
-function CartAddition(data){
-    console.log("This ran")
-    console.log(data)
-}
 
 function addCartItem(){
     x = this.id 
     $.ajax({
         url: `http://localhost:5000/cart/add/${x}`,
         type: "get",
-        success: CartAddition
-    })
-}
-function viewCart(){
-    console.log("this was called")
-    $.ajax({
-        url: "http://localhost:5000/cart",
-        type:"get",
-        success: function(x){
-            console.log(x)
-        }
     })
 }
 
 
 function setup() {
     loadImages();
-    $('#viewCart').click(viewCart)
     $(document).on("click", ".add-cart", addCartItem)
     
 }

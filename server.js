@@ -4,6 +4,7 @@ var session = require('express-session')
 const https = require('https');
 app.set('view engine', 'ejs');
 
+app.use(express.static('./public'));
 app.listen(process.env.PORT || 5000, function (err) {
     if (err)
         console.log(err);
@@ -34,6 +35,8 @@ const accountSchema = new mongoose.Schema({
 });
 const accountModel = mongoose.model("user", accountSchema);
 
+
+// ====================== Cart Routes ==========================
 
 // get to cart
 app.get('/cart', function (req, res) {
@@ -140,6 +143,46 @@ app.get('/cart/RemoveItems/:id', function (req, res) {
     });
 })
 
+// ==================== Order Routes =======================
+app.get('/orders', function (req, res) {
+    res.sendFile(__dirname + "/public/orders.html");
+
+  
+})
+
+
+// add to order 
+app.get('/order/add/:name', function (req, res) {
+    accountModel.updateOne({
+        user: req.session.user,
+        pass: req.session.pass,
+    },{
+        $push: {orders:{name: req.params.name, cost: 1000, count: 1}}
+    },function (err, data) {
+        if (err) {
+            console.log("Error " + err);
+        } else {
+            console.log("Data " + data);
+        }
+        res.send("Cart updated");
+    });
+})
+
+//get order items
+app.get('/orders/getItems', function (req, res) {
+    accountModel.findOne({
+        user: req.session.user,
+        pass: req.session.pass
+    }, function (err, data) {
+        if (err) {
+            console.log("Error " + err);
+        } else {
+            console.log("Data " + data);
+        }
+        res.send(data);
+    });
+})
+
 
 
 
@@ -236,7 +279,7 @@ app.get('/logout', function (req, res) {
     res.send("Logout succeeded");
 })
 
-app.use(express.static('./public'));
+
 
 const bodyparser = require("body-parser");
 app.use(bodyparser.urlencoded({
