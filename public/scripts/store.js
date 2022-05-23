@@ -1,5 +1,7 @@
 userCart = ''
 subtotal = 0
+tax = 0
+total = 0
 
 // catch routes for cart
 function showCartData(data) {
@@ -12,8 +14,6 @@ function showCartData(data) {
         subtotal += data.cart[i].cost * data.cart[i].count
         tax = 0.15 * subtotal
         total = subtotal + tax
-        console.log(data._id)
-
         $("main").append(`
         <div class="timeline">
             <p> ${data.cart[i].name} </p>
@@ -31,30 +31,20 @@ function showCartData(data) {
         <p>Subtotal: ${subtotal}</p>
         <p>Tax: ${tax}</p>
         <p>Total: ${total}</p>
-        <button id="Checkout"> Checkout! </button> 
-
-
+        <button onclick="order()"> Checkout! </button> 
     `
     )
 }
 
 
-function loadCartItems(data) {
-    $.ajax({
-        url: "http://localhost:5000/cart/getItems",
-        type: "GET",
-        success: showCartData
-    })
-
-}
-
 
 
 function showCartItems() {
+    console.log('called')
     $.ajax({
         url: "http://localhost:5000/cart/getItems",
         type: "get",
-        success: loadCartItems
+        success: showCartData
     })
 
 }
@@ -80,7 +70,6 @@ function increaseHits() {
 
 function decreaseHits() {
     $('main').empty();
-    console.log("decreasse function ran")
     x = this.id
     console.log(x)
     $.ajax({
@@ -88,15 +77,15 @@ function decreaseHits() {
         type: "GET",
         success: function (r) {
             console.log(r)
+            location.reload();
 
         }
 
     })
-    showCartItems()
 
 }
 
-function deleteTimeline() {
+function deleteItems() {
     $('main').empty();
     console.log("delete function ran")
     x = this.id
@@ -106,33 +95,30 @@ function deleteTimeline() {
         type: "GET",
         success: function (r) {
             console.log(r)
+            location.reload();
 
         }
 
     })
-    showCartItems()
+ 
 
 
 }
 
-function orderButtons(){
-    x = this.id
+function order(){
+    console.log('function called')
     $.ajax({
-        url: `http://localhost:5000/order/add/${x}`,
-        type: "GET",
-        success: function(x){
-            console.log(x)
-
-        }
+        url: `http://localhost:5000/orders/send`,
+        type: "put",
+        success: console.log('sucess')
     })
-    showCartItems()
 }
 function setup() {
     showCartItems()
     $("body").on("click", ".likeButtons", increaseHits)
     $("body").on("click", ".dislikeButtons", decreaseHits)
-    $("body").on("click", ".deleteButtons", deleteTimeline)
-    $("body").on("click", ".orderButtons", orderButtons)
+    $("body").on("click", ".deleteButtons", deleteItems)
+    
 
 
 

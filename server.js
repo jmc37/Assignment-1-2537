@@ -36,12 +36,12 @@ const accountSchema = new mongoose.Schema({
 const accountModel = mongoose.model("user", accountSchema);
 
 
-// ====================== Cart Routes ==========================
+// Cart items
 
 // get to cart
 app.get('/cart', function (req, res) {
     res.sendFile(__dirname + "/public/cart.html");
-  
+
 })
 
 // add to cart 
@@ -49,9 +49,15 @@ app.get('/cart/add/:name', function (req, res) {
     accountModel.updateOne({
         user: req.session.user,
         pass: req.session.pass,
-    },{
-        $push: {cart:{name: req.params.name, cost: 1000, count: 1}}
-    },function (err, data) {
+    }, {
+        $push: {
+            cart: {
+                name: req.params.name,
+                cost: 1000,
+                count: 1
+            }
+        }
+    }, function (err, data) {
         if (err) {
             console.log("Error " + err);
         } else {
@@ -77,21 +83,22 @@ app.get('/cart/getItems', function (req, res) {
     });
 })
 
-// Increase number of item in cart by 1
+// Increase items in cart by 1
 
 app.get('/cart/increaseItems/:id', function (req, res) {
     // console.log(req.body)
-    console.log("Hi")
-    console.log( req.params.id)
+    console.log(req.params.id)
     accountModel.updateOne({
         user: req.session.user,
         pass: req.session.pass,
-        "cart.name" : req.params.id
+        "cart.name": req.params.id
         // name : req.params.id
         // "_id": req.params.id
-    },{
-        $inc: {'cart.$.count': 1}
-    } ,function (err, data) {
+    }, {
+        $inc: {
+            'cart.$.count': 1
+        }
+    }, function (err, data) {
         if (err) {
             console.log("Error " + err);
         } else {
@@ -107,10 +114,12 @@ app.get('/cart/decreaseItems/:id', function (req, res) {
     accountModel.updateOne({
         user: req.session.user,
         pass: req.session.pass,
-        "cart.name" : req.params.id
-    },{
-        $inc: {'cart.$.count': -1}
-    } ,function (err, data) {
+        "cart.name": req.params.id
+    }, {
+        $inc: {
+            'cart.$.count': -1
+        }
+    }, function (err, data) {
         if (err) {
             console.log("Error " + err);
         } else {
@@ -126,12 +135,13 @@ app.get('/cart/RemoveItems/:id', function (req, res) {
     accountModel.updateOne({
         user: req.session.user,
         pass: req.session.pass,
-        
-    },{ $pull:{
-        cart:{
-            name : req.params.id
+
+    }, {
+        $pull: {
+            cart: {
+                name: req.params.id
+            }
         }
-    }
 
     }, function (err, data) {
         if (err) {
@@ -143,11 +153,11 @@ app.get('/cart/RemoveItems/:id', function (req, res) {
     });
 })
 
-// ==================== Order Routes =======================
+// Order Routes
 app.get('/orders', function (req, res) {
     res.sendFile(__dirname + "/public/orders.html");
 
-  
+
 })
 
 
@@ -156,9 +166,15 @@ app.get('/order/add/:name', function (req, res) {
     accountModel.updateOne({
         user: req.session.user,
         pass: req.session.pass,
-    },{
-        $push: {orders:{name: req.params.name, cost: 1000, count: 1}}
-    },function (err, data) {
+    }, {
+        $push: {
+            orders: {
+                name: req.params.name,
+                cost: 10,
+                count: 1
+            }
+        }
+    }, function (err, data) {
         if (err) {
             console.log("Error " + err);
         } else {
@@ -184,16 +200,46 @@ app.get('/orders/getItems', function (req, res) {
 })
 
 
+app.put('/orders/send', function (req, res) {
+    console.log(req.body)
+    accountModel.findOne({
+        user: req.session.user,
+        pass: req.session.pass
+    }, function (err, data) {
+        if (err) {
+            console.log("Error " + err);
+        } else {
+            console.log("Data " + data);
+            accountModel.updateOne({
+                user: req.session.user,
+                pass: req.session.pass
+            }, {
+                $push: {
+                    orders: data.cart
+                },
+                $set: {
+                    cart: []
+                }
+            }, function (err, data) {
+                if (err) {
+                    console.log("Error " + err);
+                } else {
+                    console.log("Data " + data);
+                }
+            })
+        }
+        res.send(data);
+    });
+})
 
 
 
 // Login
 app.get('/', function (req, res) {
-    if(req.session.authenticated){
+    if (req.session.authenticated) {
         console.log("Welcome user")
         res.sendFile(__dirname + "/public/pages/profile.html")
-    }
-    else {
+    } else {
         console.log("User needs to login properly")
         res.sendFile(__dirname + "/public/pages/login.html")
     }
@@ -212,8 +258,11 @@ app.get('/login', function (req, res) {
 app.get('/login/:user/:pass', function (req, res) {
     console.log("this went through")
     let username = req.params.user;
-	let password = req.params.pass;
-    accountModel.findOne({user: username, pass: password, }, function (err, data) {
+    let password = req.params.pass;
+    accountModel.findOne({
+        user: username,
+        pass: password,
+    }, function (err, data) {
         if (err) {
             console.log("Error " + err);
         } else {
@@ -230,8 +279,8 @@ app.get('/login/:user/:pass', function (req, res) {
 
 app.put('/create/:user/:pass', function (req, res) {
     let username = req.params.user;
-	let password = req.params.pass;
-   
+    let password = req.params.pass;
+
     console.log(username, password)
     accountModel.findOne({
         user: username,
