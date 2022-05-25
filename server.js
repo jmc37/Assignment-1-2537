@@ -53,7 +53,7 @@ app.get('/cart/add/:name', function (req, res) {
         $push: {
             cart: {
                 name: req.params.name,
-                cost: 1000,
+                cost: 100,
                 count: 1
             }
         }
@@ -92,8 +92,6 @@ app.get('/cart/increaseItems/:id', function (req, res) {
         user: req.session.user,
         pass: req.session.pass,
         "cart.name": req.params.id
-        // name : req.params.id
-        // "_id": req.params.id
     }, {
         $inc: {
             'cart.$.count': 1
@@ -257,7 +255,6 @@ app.get('/login', function (req, res) {
 
 
 app.get('/login/:user/:pass', function (req, res) {
-    console.log("this went through")
     let username = req.params.user;
     let password = req.params.pass;
     accountModel.findOne({

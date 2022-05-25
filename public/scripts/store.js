@@ -20,7 +20,7 @@ function showCartData(data) {
             
             <p> $${data.cart[i].cost} </p>
             <p> Event Hits - ${data.cart[i].count} </p>
-            <button class="likeButtons" id="${data.cart[i].name}"> Add more item </button>
+            <button class="likeButtons" id="${data.cart[i].name}"> Add item </button>
             <button class="dislikeButtons" id="${data.cart[i].name}"> Remove 1 item </button>  
             <button class="deleteButtons" id="${data.cart[i].name}"> Delete! </button> 
         </div>
@@ -49,7 +49,7 @@ function showCartItems() {
 
 }
 
-function increaseHits() {
+function increaseItems() {
 
     x = this.id
 
@@ -68,7 +68,7 @@ function increaseHits() {
 
 }
 
-function decreaseHits() {
+function decreaseItems() {
     $('main').empty();
     x = this.id
     console.log(x)
@@ -118,8 +118,8 @@ function order(){
 }
 function setup() {
     showCartItems()
-    $("body").on("click", ".likeButtons", increaseHits)
-    $("body").on("click", ".dislikeButtons", decreaseHits)
+    $("body").on("click", ".likeButtons", increaseItems)
+    $("body").on("click", ".dislikeButtons", decreaseItems)
     $("body").on("click", ".deleteButtons", deleteItems)
     
 
