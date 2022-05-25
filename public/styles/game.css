@@ -1,0 +1,23 @@
+body{
+    background-color: white;
+    color: black;
+    height: 100vh;
+    margin: 0px;
+}
+
+#game_grid{
+    display: flex;
+    flex-wrap: wrap;
+    width: 600px;
+    height: 400px;
+    margin: auto;
+}
+
+.card{
+    width: 33.3%
+}
+
+.front_face, .back_face{
+    width: 100px;
+    height: 125px;
+}
