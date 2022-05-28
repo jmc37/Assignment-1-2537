@@ -31,7 +31,8 @@ const accountSchema = new mongoose.Schema({
     admin: Boolean,
     cart: Array,
     orders: Array,
-    timeline: Array
+    timeline: Array,
+    game: Array,
 
 });
 const accountModel = mongoose.model("user", accountSchema);
@@ -183,20 +184,20 @@ app.get('/order/add/:name', function (req, res) {
     });
 })
 
-//get order items
-app.get('/orders/getItems', function (req, res) {
-    accountModel.findOne({
-        user: req.session.user,
-        pass: req.session.pass
-    }, function (err, data) {
-        if (err) {
-            console.log("Error " + err);
-        } else {
-            console.log("Data " + data);
-        }
-        res.send(data);
-    });
-})
+// //get order items
+// app.get('/orders/getItems', function (req, res) {
+//     accountModel.findOne({
+//         user: req.session.user,
+//         pass: req.session.pass
+//     }, function (err, data) {
+//         if (err) {
+//             console.log("Error " + err);
+//         } else {
+//             console.log("Data " + data);
+//         }
+//         res.send(data);
+//     });
+// })
 
 
 app.put('/orders/send', function (req, res) {
@@ -411,6 +412,43 @@ app.get('/logout', function (req, res) {
     res.send("Logout succeeded");
 })
 
+
+// Update game log
+app.put('/gamelog/:info', function (req, res) {
+    console.log('called')
+    accountModel.updateOne({
+        user: req.session.user,
+        pass: req.session.pass,
+    }, {
+        $push: {
+            game: {
+                info: req.params.info,
+            }
+        }
+    }, function (err, data) {
+        if (err) {
+            console.log("Error " + err);
+        } else {
+            console.log("Data " + data);
+        }
+        res.send("Gamelog updated");
+    });
+})
+
+// Get game log
+app.get('/gamelog', function (req, res) {
+    accountModel.findOne({
+        user: req.session.user,
+        pass: req.session.pass
+    }, function (err, data) {
+        if (err) {
+            console.log("Error " + err);
+        } else {
+            console.log("Data " + data);
+        }
+        res.send(data);
+    });
+})
 
 
 const bodyparser = require("body-parser");

@@ -32,24 +32,21 @@
 
     </nav>
     <div id="game_selection">
-        <form>
-            <label for="width">Width:</label><br>
-            <input type="text" id="width" name="width"><br>
-            <label for="height">Height:</label><br>
-            <input type="text" id="height" name="height"><br>
-            <label for="number">Number of pokemon:</label><br>
-            <input type="text" id="number" name="number">
-        </form>
+        <label for="grid_size">Choose grid:</label>
+        <select name="grid_size" id="grid_size">
+            <option value="5">6</option>
+            <option value="8">9</option>
+            <option value="11">12</option>
 
-        <form>
-            <p>Please select difficulty:</p>
-              <input type="radio" id="Easy" name="difficulty" value="2">
-              <label for="Easy">Easy</label><br>
-              <input type="radio" id="css" name="difficulty" value="1">
-              <label for="Medium">Medium</label><br>
-              <input type="radio" id="Hard" name="difficulty" value="0.5">
-              <label for="Hard">Hard</label>
-        </form>
+        </select>
+        <label for="difficulty">Choose a difficulty:</label>
+        <select name="difficulty" id="difficulty">
+            <option value="2">Easy</option>
+            <option value="1">Medium</option>
+            <option value="0.25">Hard</option>
+        </select>
+        <label for="number">Number of pokemon(min 2):</label>
+        <input type="text" id="number" name="number">
         <button id="start_game">Start</button>
     </div>
     <div>Time Left <span id="time"></span></div>

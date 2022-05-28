@@ -3,13 +3,22 @@ firstCard = undefined
 secondCard = undefined
 lockboard = false;
 poke_img = []
+grid = undefined
 win = 0
 loss = true
 correct = 0
 pokemon_total = 3
 card = ''
 
-
+function game_history(info){
+    console.log(info)
+    $.ajax({
+        type: "put",
+        url: `http://localhost:5000/gamelog/${info}`,
+        success: console.log('updated')
+      })
+      game_timeline();
+}
 
 function game() {
     console.log('called')
@@ -34,12 +43,14 @@ function game() {
                 firstCard = undefined
                 secondCard = undefined
                 correct += 1
+                game_history('card matched')
                 if (correct == pokemon_total){
                     loss = false
                     alert("You win!")
+                    game_history('Game won!')
                 }
             } else {
-                console.log('not a match')
+                game_history('Not a match!')
                 setTimeout(() => {
                     $(`#${firstCard.id}`).parent().removeClass("flip");
                     
@@ -63,7 +74,7 @@ function add_img(data) {
 }
 
 function cards() {
-    for (i = 0; i <= 5; i++) {
+    for (i = 0; i <= grid; i++) {
         card += `
     <div class="card">
     <img id="img${i}" class="front_face" src="${poke_img[i]}" alt="">
@@ -79,7 +90,7 @@ function cards() {
 
 // Display images
 async function loadImages() {
-    for (d = 1; d <= 3; d++) { // three times
+    for (d = 1; d < number; d++) { // three times
         pokemon_number = Math.floor(Math.random() * 898) + 1;
         await $.ajax({
             "url": `https://pokeapi.co/api/v2/pokemon/${pokemon_number}/`,
@@ -112,6 +123,7 @@ function startTimer(duration, display) {
         display.textContent = minutes + ":" + seconds; 
         if(minutes + seconds == 0 && loss == true){
             alert('gameover')
+            game_history('Game loss!')
             $('#time').hide()
         }
     }
@@ -125,22 +137,41 @@ setInterval(timer, 1000);
 
 function begin() {
     $('#time').show()
-    difficulty = $('input[name="difficulty"]:checked').val();
+    difficulty = $("#difficulty option:selected").val();
+    console.log(difficulty)
     var time = 60 * difficulty,
     display = document.querySelector('#time');
     startTimer(time, display);
 }
-function setup() {
-    $(document).on("click", "#start_game",  function (){
-       loadImages();
-       width = $('#width').val();
-       height = $('#height').val();
-       number = $('#number').val();
 
-       console.log(width)
-       console.log(height)
-       console.log(number)
-       begin()
+
+function game_timeline() {
+    $('#game_history').empty();
+    $.ajax({
+        url: "http://localhost:5000/gamelog",
+        type: "get",
+        data: "",
+        success: (r) => {
+            console.log(r)
+            for (k = 0; k < r.game.length; k++) {
+                $('#game_history').append(
+                    `                  
+                    <p>${r.game[k].info}</p>
+
+`)
+            }
+        }
+    })
+}
+function setup() {
+    game_timeline()
+    $(document).on("click", "#start_game",  function (){
+        card = ''
+        loadImages();
+        grid = $("#grid_size option:selected").val()
+        number = $('#number').val();
+        console.log(number)
+        begin()
 
     })
     $("body").on("click", ".card", game)
