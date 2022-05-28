@@ -243,15 +243,7 @@ app.get('/', function (req, res) {
     }
 })
 
-app.get('/login', function (req, res) {
-    if (req.session.authenticated) {
-        res.render("profile.html", {
-            "name": req.session.user
-        });
-    } else {
-        res.sendFile(__dirname + "/public/login.html");
-    }
-})
+// 
 
 
 app.get('/login/:user/:pass', function (req, res) {
@@ -306,7 +298,19 @@ app.put('/create/:user/:pass', function (req, res) {
         }
     });
 })
-
+// Delete
+app.get('/user/delete/:id', function (req, res) {
+    accountModel.deleteOne({
+        _id: req.params.id
+    }, function (err, data) {
+        if (err) {
+            console.log("Error" + err);
+        } else {
+            console.log("Data" + data);
+        }
+        res.send("Deleted")
+    })
+})
 
 app.get('/userinfo', function (req, res) {
     console.log('called')
@@ -322,6 +326,18 @@ app.get('/userinfo', function (req, res) {
     });
 })
 
+app.get('/admin', function (req, res) {
+    console.log('called')
+    accountModel.find({},
+        function (err, data) {
+        if (err) {
+            console.log("Error " + err);
+        } else {
+            console.log("Data " + data);
+        }
+        res.send(data);
+    });
+})
 app.get('/logout', function (req, res) {
     req.session.authenticated = false;
     res.send("Logout succeeded");

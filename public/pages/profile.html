@@ -31,9 +31,29 @@
               </div>  
 
         </nav>
-           <main></main>
-           <button onclick="logout" style="background-color: green;">Logout</button>
+        <main> <img src="https://i.pinimg.com/originals/fe/95/bf/fe95bf35e8fec179fdaee3ba3b9b5cfc.jpg" id="girl" alt="Italian Trulli">       
+        </main>
+        <div id="profile_container">
+        Past orders
+           <div id="purchase_timeline"></div>
+        Users
+           <div id="admin"></div>
+       
+    <div id="create_users">
+        <h3>Create Users</h3>
+        <label for="uname"><b>Username</b></label>
+        <input type="text" placeholder="Enter Username" id="uname" name="uname" required>
+    
+        <label for="psw"><b>Password</b></label>
+        <input type="password" placeholder="Enter Password" id="psw" name="psw" required>
+            
+        <button type="button" onclick="signup()" class="button">Create</button>    <label>
+          <input type="checkbox" checked="checked" name="remember"> Remember me
+        </label>
     </div>
+</div>
+<button onclick="logout" style="background-color: green;">Logout</button>
+</div>
     <footer>
         <!-- <h1>.</h1> -->
         <h5>
