@@ -42,7 +42,7 @@ function showCartData(data) {
 function showCartItems() {
     console.log('called')
     $.ajax({
-        url: "https://bcit-pokedex.herokuapp.com/cart/getItems",
+        url: "http://localhost:5000/cart/getItems",
         type: "get",
         success: showCartData
     })

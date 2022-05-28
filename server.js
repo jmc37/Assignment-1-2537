@@ -248,7 +248,6 @@ app.get('/', function (req, res) {
 
 
 app.get('/login/:user/:pass', function (req, res) {
-    console.log('called')
     let username = req.params.user;
     let password = req.params.pass;
     accountModel.findOne({
@@ -271,16 +270,13 @@ app.get('/login/:user/:pass', function (req, res) {
 
 // Update user
 app.get('/user/edit/:user/:pass/:id', function (req, res) {
-    // console.log(req.body)
-    console.log(req.params.id)
+console.log('called')
+    username = req.params.user
+    password = req.params.pass
     accountModel.updateOne({
-        user: req.params.user,
-        pass: req.params.pass,
-        "cart.name": req.params.id
+        _id: req.params.id,
     }, {
-        $inc: {
-            'cart.$.count': 1
-        }
+         $set: { user: username, pass: password  },
     }, function (err, data) {
         if (err) {
             console.log("Error " + err);
@@ -291,6 +287,23 @@ app.get('/user/edit/:user/:pass/:id', function (req, res) {
     });
 })
 
+// Made admin
+app.get('/user/makeAdmin/:user/:pass/:id', function (req, res) {
+    console.log('called')
+        accountModel.updateOne({
+            _id: req.params.id,
+        }, {
+             $set: { admin: true},
+        }, function (err, data) {
+            if (err) {
+                console.log("Error " + err);
+            } else {
+                console.log("Data " + data);
+            }
+            res.send(data);
+        });
+    })
+// Create user
 app.put('/create/:user/:pass', function (req, res) {
     let username = req.params.user;
     let password = req.params.pass;
@@ -307,6 +320,7 @@ app.put('/create/:user/:pass', function (req, res) {
             accountModel.create({
                 user: username,
                 pass: password,
+                admin: false,
                 cart: [],
                 orders: [],
                 timeline: []
@@ -369,7 +383,6 @@ app.get('/user/delete/:id', function (req, res) {
 })
 
 app.get('/userinfo', function (req, res) {
-    console.log('called')
     accountModel.find({
         user: req.session.user,
     }, function (err, data) {
@@ -383,7 +396,6 @@ app.get('/userinfo', function (req, res) {
 })
 
 app.get('/admin', function (req, res) {
-    console.log('called')
     accountModel.find({},
         function (err, data) {
         if (err) {

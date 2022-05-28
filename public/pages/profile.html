@@ -21,39 +21,44 @@
             <div class="dropdown">
                 <button class="dropbtn">Menu</button>
                 <div class="dropdown-content">
-                  <a href="../pages/index.html">Main</a>
-                  <a href="../pages/search.html">Search</a>
-                  <a href="../pages/timeline.html">Timeline</a>
-                  <a href="../pages/profile.html">Profile</a>
-                  <a href="../pages/store.html">Store</a>
+                    <a href="../pages/index.html">Main</a>
+                    <a href="../pages/search.html">Search</a>
+                    <a href="../pages/timeline.html">Timeline</a>
+                    <a href="../pages/profile.html">Profile</a>
+                    <a href="../pages/store.html">Store</a>
 
                 </div>
-              </div>  
+            </div>
 
         </nav>
-        <main> <img src="https://i.pinimg.com/originals/fe/95/bf/fe95bf35e8fec179fdaee3ba3b9b5cfc.jpg" id="girl" alt="Italian Trulli">       
+        <main> <img src="https://i.pinimg.com/originals/fe/95/bf/fe95bf35e8fec179fdaee3ba3b9b5cfc.jpg" id="girl"
+                alt="Italian Trulli">
         </main>
         <div id="profile_container">
-        Past orders
-           <div id="purchase_timeline"></div>
-        Users
-           <div id="admin"></div>
-       
-    <div id="create_users">
-        <h3>Create Users</h3>
-        <label for="uname"><b>Username</b></label>
-        <input type="text" placeholder="Enter Username" id="uname" name="uname" required>
-    
-        <label for="psw"><b>Password</b></label>
-        <input type="password" placeholder="Enter Password" id="psw" name="psw" required>
-        <label for="admin_user"> admin</label><br>
-        <input type="checkbox" id="admin_user" name="true" value="true">
-        <button type="button" onclick="signup()" class="button">Create</button> <label>
-        </label>
+        <div class="topic_container">
+                Past orders
+                <div id="purchase_timeline"></div>
+            </div>
+
+            <div class="topic_container">
+                Users
+                <div id="admin"></div>
+            </div>
+
+            <div id="create_users">
+                <h3>Create/Edit Users</h3>
+                <label for="uname"><b>Username</b></label>
+                <input type="text" placeholder="Enter Username" id="uname" name="uname" required>
+                <label for="psw"><b>Password</b></label>
+                <input type="password" placeholder="Enter Password" id="psw" name="psw" required>
+                <label for="admin_user"> admin</label>
+                <input type="checkbox" id="admin_user" name="true" value="true">
+                <button type="button" onclick="signup()" class="button">Create</button> <label>
+                </label>
+            </div>
+        </div>
+        <button onclick="logout" style="background-color: green;">Logout</button>
     </div>
-</div>
-<button onclick="logout" style="background-color: green;">Logout</button>
-</div>
     <footer>
         <!-- <h1>.</h1> -->
         <h5>
