@@ -42,7 +42,7 @@ function showCartData(data) {
 function showCartItems() {
     console.log('called')
     $.ajax({
-        url: "http://localhost:5000/cart/getItems",
+        url: "https://bcit-pokedex.herokuapp.com/cart/getItems",
         type: "get",
         success: showCartData
     })
@@ -54,7 +54,7 @@ function increaseItems() {
     x = this.id
 
     $.ajax({
-        url: `http://localhost:5000/cart/increaseItems/${x}`,
+        url: `https://bcit-pokedex.herokuapp.com/cart/increaseItems/${x}`,
         type: "GET",
         success: function (r) {
             console.log(r)
@@ -73,7 +73,7 @@ function decreaseItems() {
     x = this.id
     console.log(x)
     $.ajax({
-        url: `http://localhost:5000/cart/decreaseItems/${x}`,
+        url: `https://bcit-pokedex.herokuapp.com/cart/decreaseItems/${x}`,
         type: "GET",
         success: function (r) {
             console.log(r)
