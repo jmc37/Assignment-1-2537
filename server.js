@@ -28,6 +28,7 @@ app.use(session({
 const accountSchema = new mongoose.Schema({
     user: String,
     pass: String,
+    admin: Boolean,
     cart: Array,
     orders: Array,
     timeline: Array
@@ -268,6 +269,28 @@ app.get('/login/:user/:pass', function (req, res) {
     });
 })
 
+// Update user
+app.get('/user/edit/:user/:pass/:id', function (req, res) {
+    // console.log(req.body)
+    console.log(req.params.id)
+    accountModel.updateOne({
+        user: req.params.user,
+        pass: req.params.pass,
+        "cart.name": req.params.id
+    }, {
+        $inc: {
+            'cart.$.count': 1
+        }
+    }, function (err, data) {
+        if (err) {
+            console.log("Error " + err);
+        } else {
+            console.log("Data " + data);
+        }
+        res.send(data);
+    });
+})
+
 app.put('/create/:user/:pass', function (req, res) {
     let username = req.params.user;
     let password = req.params.pass;
@@ -284,6 +307,39 @@ app.put('/create/:user/:pass', function (req, res) {
             accountModel.create({
                 user: username,
                 pass: password,
+                cart: [],
+                orders: [],
+                timeline: []
+            }, function (err, data) {
+                if (err) {
+                    console.log("Error " + err);
+                } else {
+                    console.log("Data " + data);
+                }
+                res.send(data);
+            });
+        }
+    });
+})
+// Create admin
+
+app.put('/admin/:user/:pass', function (req, res) {
+    let username = req.params.user;
+    let password = req.params.pass;
+
+    console.log(username, password)
+    accountModel.findOne({
+        user: username,
+        pass: password,
+
+    }, function (err, data) {
+        if (data) {
+            res.send(null);
+        } else {
+            accountModel.create({
+                user: username,
+                pass: password,
+                admin: true,
                 cart: [],
                 orders: [],
                 timeline: []

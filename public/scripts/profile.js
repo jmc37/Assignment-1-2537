@@ -54,7 +54,7 @@ function get_user() {
           $('#admin').append(
             `
                      ${users[i].user}
-                     <button class="likeButtons" id="${users[i]["_id"]}"> Like! </button>
+                     <button class="editButtons" id="${users[i]["_id"]}"> Edit! </button>
                      <button class="deleteButtons" id="${users[i]["_id"]}"> Delete! </button>
                      <br>
 
@@ -80,6 +80,22 @@ function get_user() {
     })
     admin();
   }
+  
+  function editID(){
+    x = this.id
+    if (x == user_id ){
+      alert("Can't edit your own account")
+    }
+    else{
+    $.ajax({
+        url: `http://localhost:5000/user/edit/${document.getElementById("uname").value}/${document.getElementById("psw").value}/${x}`,
+        type: "get",
+        success: function (x){
+            console.log(x)
+        }
+    })
+    admin();
+  }
 }
     function logout() {
         console.log('called')
@@ -93,9 +109,31 @@ function get_user() {
         })
       }
 
-      // Signup Function
-    
+    // Signup Function
     function signup() {
+      if($('#admin_user').val() == 'true'){
+        console.log("admin function called")
+        $.ajax({
+          type: "put",
+          url: `http://localhost:5000/admin/${document.getElementById("uname").value}/${document.getElementById("psw").value}`,
+          success: function (x){
+            if (x) {
+              admin();
+              console.log(x);
+              $("#login").append(`<br><div class="alertsuccess">
+              <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
+              Successfully created account.
+              </div>`);
+            } else {
+              $("#login").append(`<br><div class="alertfailure">
+              <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
+              <p>Failed to create account.</p><p>Username and password combination is taken.</p>
+              </div>`);
+            }
+          }
+        })
+      }
+      else{
       $.ajax({
         type: "put",
         url: `http://localhost:5000/create/${document.getElementById("uname").value}/${document.getElementById("psw").value}`,
@@ -116,11 +154,13 @@ function get_user() {
         }
       })
     }
+    }
     function setup() {
       $('#admin').hide();
       $('#create_users').hide();
         get_user();
         $("body").on("click", ".deleteButtons", deleteID)
+        $("body").on("click", ".editButtons", editID)
 
 
     }
