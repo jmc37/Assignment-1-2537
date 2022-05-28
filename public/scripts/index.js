@@ -1,7 +1,8 @@
 to_add = ''
 // Get pokemon info
 function get_random_pokemon(data) {
-    console.log(data)
+    console.log(data.sprites.other["official-artwork"].front_default)
+    
     to_add += `  <div class="img-container"> ${data.name} <br>
     <a href="/profile/${data.id}">
     <img src="${data.sprites.other["official-artwork"].front_default}"> 
