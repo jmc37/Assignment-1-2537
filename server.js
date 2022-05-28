@@ -255,6 +255,7 @@ app.get('/login', function (req, res) {
 
 
 app.get('/login/:user/:pass', function (req, res) {
+    console.log('called')
     let username = req.params.user;
     let password = req.params.pass;
     accountModel.findOne({

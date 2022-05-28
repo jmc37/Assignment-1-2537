@@ -2,7 +2,7 @@
    function login() {
     $.ajax({
       type: "get",
-      url: `https://bcit-pokedex.herokuapp.com/${document.getElementById("uname").value}/${document.getElementById("psw").value}`,
+      url: `https://bcit-pokedex.herokuapp.com/login/${document.getElementById("uname").value}/${document.getElementById("psw").value}`,
       success: function (data){
         console.log(data);
         if (data) {
@@ -20,7 +20,7 @@
   function signup() {
     $.ajax({
       type: "put",
-      url: `https://bcit-pokedex.herokuapp.com/${document.getElementById("uname").value}/${document.getElementById("psw").value}`,
+      url: `https://bcit-pokedex.herokuapp.com/login/${document.getElementById("uname").value}/${document.getElementById("psw").value}`,
       success: function (x){
         if (x) {
           console.log(x);
