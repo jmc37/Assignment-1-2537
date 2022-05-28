@@ -336,3 +336,9 @@ img{
   #game_selection{
     display: flex;
   }
+  #game_history{       
+    width: 200px;
+    height: 300px;
+    background-color: orange;
+    overflow: scroll;
+}

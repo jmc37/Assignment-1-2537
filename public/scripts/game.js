@@ -4,6 +4,8 @@ secondCard = undefined
 lockboard = false;
 poke_img = []
 win = 0
+loss = true
+correct = 0
 pokemon_total = 3
 card = ''
 
@@ -31,8 +33,9 @@ function game() {
                 $(`#${secondCard.id}`).parent().off("click")
                 firstCard = undefined
                 secondCard = undefined
-                win += 1
-                if (win == pokemon_total){
+                correct += 1
+                if (correct == pokemon_total){
+                    loss = false
                     alert("You win!")
                 }
             } else {
@@ -73,12 +76,10 @@ function cards() {
 
 }
 
-function start_game(){
-    console.log('game started')
-}
+
 // Display images
 async function loadImages() {
-    for (i = 1; i <= 3; i++) { // three times
+    for (d = 1; d <= 3; d++) { // three times
         pokemon_number = Math.floor(Math.random() * 898) + 1;
         await $.ajax({
             "url": `https://pokeapi.co/api/v2/pokemon/${pokemon_number}/`,
@@ -90,8 +91,58 @@ async function loadImages() {
     cards();
 }
 
+function startTimer(duration, display) {
+    console.log(duration)
+    var start = Date.now(),
+        diff,
+        minutes,
+        seconds;
+    function timer() {
+        // get the number of seconds that have elapsed since 
+        // startTimer() was called
+        diff = duration - (((Date.now() - start) / 1000) | 0);
+
+        // does the same job as parseInt truncates the float
+        minutes = (diff / 60) | 0;
+        seconds = (diff % 60) | 0;
+
+        minutes = minutes < 10 ? "0" + minutes : minutes;
+        seconds = seconds < 10 ? "0" + seconds : seconds;
+
+        display.textContent = minutes + ":" + seconds; 
+        if(minutes + seconds == 0 && loss == true){
+            alert('gameover')
+            $('#time').hide()
+        }
+    }
+        for (i = 0; i <= duration; i++){
+        timer();
+setInterval(timer, 1000);
+        }
+
+    
+}
+
+function begin() {
+    $('#time').show()
+    difficulty = $('input[name="difficulty"]:checked').val();
+    var time = 60 * difficulty,
+    display = document.querySelector('#time');
+    startTimer(time, display);
+}
 function setup() {
-    loadImages();
+    $(document).on("click", "#start_game",  function (){
+       loadImages();
+       width = $('#width').val();
+       height = $('#height').val();
+       number = $('#number').val();
+
+       console.log(width)
+       console.log(height)
+       console.log(number)
+       begin()
+
+    })
     $("body").on("click", ".card", game)
 
 
