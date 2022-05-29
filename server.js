@@ -33,6 +33,8 @@ const accountSchema = new mongoose.Schema({
     orders: Array,
     timeline: Array,
     game: Array,
+    win: Number,
+    loss: Number,
 
 });
 const accountModel = mongoose.model("user", accountSchema);
@@ -432,6 +434,42 @@ app.put('/gamelog/:info', function (req, res) {
             console.log("Data " + data);
         }
         res.send("Gamelog updated");
+    });
+})
+
+app.get('/win', function (req, res) {
+    accountModel.updateOne({
+        user: req.session.user,
+        pass: req.session.pass,
+    }, {
+        $inc: {
+            win: 1
+        }
+    }, function (err, data) {
+        if (err) {
+            console.log("Error " + err);
+        } else {
+            console.log("Data " + data);
+        }
+        res.send(data);
+    });
+})
+
+app.get('/loss', function (req, res) {
+    accountModel.updateOne({
+        user: req.session.user,
+        pass: req.session.pass,
+    }, {
+        $inc: {
+            loss: 1
+        }
+    }, function (err, data) {
+        if (err) {
+            console.log("Error " + err);
+        } else {
+            console.log("Data " + data);
+        }
+        res.send(data);
     });
 })
 
