@@ -18,7 +18,6 @@ function game_history(info) {
     $.ajax({
         type: "put",
         url: `https://bcit-pokedex.herokuapp.com/gamelog/${info}`,
-        success: console.log('updated')
     })
     game_timeline();
 }
@@ -45,7 +44,6 @@ function update_score(){
         type: "get",
         data: "",
         success: (r) => {
-            console.log(r)
                 $('#score').html('')
                 $('#score').append(`<p> Win ${r.win} Loss ${r.loss} </p>`)
         }
@@ -67,7 +65,6 @@ function add_img(data) {
 
 function shuffle(){
     m = 0;
-    console.log(all)
     while(m < all){
     digit = Math.floor(Math.random() * poke_img.length);
     pokemon.push(poke_img[digit])
@@ -78,7 +75,6 @@ function shuffle(){
 }
 
 function cards() {
-    console.log(pokemon)
     for (i = 0; i <= grid; i++) {
         card += `
     <div class="card">
@@ -127,7 +123,6 @@ function game() {
                 secondCard = undefined
                 correct += 1
                 game_history('card matched')
-                console.log(correct)
                 if (correct == (+grid + 1) / 2 ) {
                     loss = false
                     $('#time').hide()

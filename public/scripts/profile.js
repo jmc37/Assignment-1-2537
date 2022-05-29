@@ -46,14 +46,11 @@ function get_user() {
 
 function admin() {
   $('#admin').empty();
-  console.log('called')
   $.ajax({
     "url": 'https://bcit-pokedex.herokuapp.com/admin/',
     "type": "GET",
     success: (users) => {
-      console.log(users.length)
       for (i = 0; i <= users.length; i++) {
-        console.log(users[i].user)
         $('#admin').append(
           `
                      ${users[i].user}
@@ -88,7 +85,6 @@ function deleteID() {
 }
 
 function editID() {
-  console.log('edit id called')
   x = this.id
   if (x == user_id) {
     alert("Can't edit your own account")
@@ -105,7 +101,6 @@ function editID() {
 }
 
 function makeAdmin() {
-  console.log('edit id called')
   x = this.id
   if (x == user_id) {
     alert("Can't edit your own account")
@@ -122,12 +117,10 @@ function makeAdmin() {
 }
 
 function logout() {
-  console.log('called')
   $.ajax({
     type: "get",
     url: 'https://bcit-pokedex.herokuapp.com/logout',
     success: function (x) {
-      console.log(x);
       window.location.href = 'https://bcit-pokedex.herokuapp.com/';
     }
   })
@@ -136,14 +129,12 @@ function logout() {
 // Signup Function
 function signup() {
   if($("#admin_user").is(':checked')) {
-    console.log("admin function called")
     $.ajax({
       type: "put",
       url: `https://bcit-pokedex.herokuapp.com/admin/${document.getElementById("uname").value}/${document.getElementById("psw").value}`,
       success: function (x) {
         if (x) {
           admin();
-          console.log(x);
           $("#login").append(`<br><div class="alertsuccess">
               <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
               Successfully created account.
@@ -163,7 +154,6 @@ function signup() {
       success: function (x) {
         if (x) {
           admin();
-          console.log(x);
           $("#login").append(`<br><div class="alertsuccess">
             <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
             Successfully created account.
