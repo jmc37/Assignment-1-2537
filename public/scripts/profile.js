@@ -9,12 +9,6 @@ function get_user() {
     "url": 'https://bcit-pokedex.herokuapp.com/userinfo/',
     "type": "GET",
     success: (r) => {
-      user_id = r[0]._id
-      $('#purchasetimeline').append(
-        `           
-                    <p>Welcome - ${r[0].user} senpai</p>
-                    <p> These are your past orders</p>       
-`)
       for (i = 0; i < r[0].orders.length; i++) {
         subtotal = 0
         $('#purchase_timeline').append(`
@@ -50,6 +44,7 @@ function admin() {
     "url": 'https://bcit-pokedex.herokuapp.com/admin/',
     "type": "GET",
     success: (users) => {
+      console.log(users)
       for (i = 0; i <= users.length; i++) {
         $('#admin').append(
           `
