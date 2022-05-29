@@ -186,20 +186,20 @@ app.get('/order/add/:name', function (req, res) {
     });
 })
 
-// //get order items
-// app.get('/orders/getItems', function (req, res) {
-//     accountModel.findOne({
-//         user: req.session.user,
-//         pass: req.session.pass
-//     }, function (err, data) {
-//         if (err) {
-//             console.log("Error " + err);
-//         } else {
-//             console.log("Data " + data);
-//         }
-//         res.send(data);
-//     });
-// })
+//get order items
+app.get('/orders/getItems', function (req, res) {
+    accountModel.findOne({
+        user: req.session.user,
+        pass: req.session.pass
+    }, function (err, data) {
+        if (err) {
+            console.log("Error " + err);
+        } else {
+            console.log("Data " + data);
+        }
+        res.send(data);
+    });
+})
 
 
 app.put('/orders/send', function (req, res) {

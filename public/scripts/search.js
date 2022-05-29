@@ -179,7 +179,7 @@ function clear(){
 }
 function addNewEvent(poke_type){
     $.ajax({
-        url: "http://localhost:5000/timeline/insert/",
+        url: "https://bcit-pokedex.herokuapp.com/timeline/insert/",
         type: "put",
         data: {
             text: `Client has searched for ${poke_type}`,
@@ -191,7 +191,7 @@ function addNewEvent(poke_type){
 }
 function addNewEvent(poke_type){
     $.ajax({
-        url: "http://localhost:5000/timeline/insert/",
+        url: "https://bcit-pokedex.herokuapp.com/timeline/insert/",
         type: "put",
         data: {
             text: `Client has searched for ${poke_type}`,

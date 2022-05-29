@@ -3,17 +3,21 @@ firstCard = undefined
 secondCard = undefined
 lockboard = false;
 poke_img = []
+pokemon = []
 grid = undefined
 win = 0
 loss = true
 correct = 0
 pokemon_total = 3
 card = ''
+number = undefined
+all = undefined
+
 
 function game_history(info) {
     $.ajax({
         type: "put",
-        url: `http://localhost:5000/gamelog/${info}`,
+        url: `https://bcit-pokedex.herokuapp.com/gamelog/${info}`,
         success: console.log('updated')
     })
     game_timeline();
@@ -21,7 +25,7 @@ function game_history(info) {
 
 function won() {
     $.ajax({
-        url: `http://localhost:5000/win`,
+        url: `https://bcit-pokedex.herokuapp.com/win`,
         type: "get",
         success: update_score()
     })
@@ -29,7 +33,7 @@ function won() {
 
 function loser() {
     $.ajax({
-        url: `http://localhost:5000/loss`,
+        url: `https://bcit-pokedex.herokuapp.com/loss`,
         type: "get",
         success: update_score()
     })
@@ -37,16 +41,71 @@ function loser() {
 
 function update_score(){
     $.ajax({
-        url: "http://localhost:5000/gamelog",
+        url: "https://bcit-pokedex.herokuapp.com/gamelog",
         type: "get",
         data: "",
         success: (r) => {
             console.log(r)
-                $('#score').append(`<p> Win ${r.win} Loss${r.loss} </p>`)
+                $('#score').html('')
+                $('#score').append(`<p> Win ${r.win} Loss ${r.loss} </p>`)
         }
     })
 }
 
+function add_img(data) {
+    if (number == 2){
+    poke_img.push(data.sprites.other["official-artwork"].front_default)
+    poke_img.push(data.sprites.other["official-artwork"].front_default)
+    poke_img.push(data.sprites.other["official-artwork"].front_default)
+    poke_img.push(data.sprites.other["official-artwork"].front_default)
+    }
+    else{
+        poke_img.push(data.sprites.other["official-artwork"].front_default)
+        poke_img.push(data.sprites.other["official-artwork"].front_default)
+    }
+}
+
+function shuffle(){
+    m = 0;
+    console.log(all)
+    while(m < all){
+    digit = Math.floor(Math.random() * poke_img.length);
+    pokemon.push(poke_img[digit])
+    poke_img.splice(digit, 1)
+    m++
+    }
+    cards();
+}
+
+function cards() {
+    console.log(pokemon)
+    for (i = 0; i <= grid; i++) {
+        card += `
+    <div class="card">
+    <img id="img${i}" class="front_face" src="${pokemon[i]}" alt="">
+    <img class="back_face" src="../images/pokemon.png" alt="">
+</div>
+    `
+    }
+    $("#game_grid").html(card)
+
+}
+
+
+// Display images
+async function loadImages() {
+    for (d = 0; d < number; d++) { // three times
+        pokemon_number = Math.floor(Math.random() * 898) + 1;
+        await $.ajax({
+            "url": `https://bcit-pokedex.herokuapp.com/${pokemon_number}/`,
+            "type": "GET",
+            "success": add_img
+        })
+
+    }
+    all = poke_img.length
+    shuffle();
+}
 
 function game() {
     if (lockboard) {
@@ -62,14 +121,16 @@ function game() {
         }
         if (secondCard) {
             if ($(`#${firstCard.id}`).attr("src") == $(`#${secondCard.id}`).attr("src")) {
-                $(`#${firstCard.id}`).parent().off("click")
-                $(`#${secondCard.id}`).parent().off("click")
+                $(`#card-${firstCard}`).prop("onclick", null);
+                $(`#card-${secondCard}`).prop("onclick", null);
                 firstCard = undefined
                 secondCard = undefined
                 correct += 1
                 game_history('card matched')
-                if (correct == number ) {
+                console.log(correct)
+                if (correct == (+grid + 1) / 2 ) {
                     loss = false
+                    $('#time').hide()
                     alert("You win!")
                     game_history('Game won!')
                     won();
@@ -92,41 +153,6 @@ function game() {
 
 
 
-function add_img(data) {
-    console.log('hello')
-    poke_img.push(data.sprites.other["official-artwork"].front_default)
-    poke_img.push(data.sprites.other["official-artwork"].front_default)
-}
-
-function cards() {
-    console.log(poke_img)
-    for (i = 0; i <= grid; i++) {
-        card += `
-    <div class="card">
-    <img id="img${i}" class="front_face" src="${poke_img[i]}" alt="">
-    <img class="back_face" src="../images/pokemon.png" alt="">
-</div>
-    `
-    }
-    $("#game_grid").html(card)
-
-}
-
-
-// Display images
-async function loadImages() {
-    for (d = 0; d < number; d++) { // three times
-        pokemon_number = Math.floor(Math.random() * 898) + 1;
-        console.log(pokemon_number)
-        await $.ajax({
-            "url": `https://pokeapi.co/api/v2/pokemon/${pokemon_number}/`,
-            "type": "GET",
-            "success": add_img
-        })
-
-    }
-    cards();
-}
 
 function startTimer(duration, display) {
     var start = Date.now(),
@@ -149,6 +175,7 @@ function startTimer(duration, display) {
         display.textContent = minutes + ":" + seconds;
         if (minutes + seconds == 0 && loss == true) {
             alert('gameover')
+            $("#game_grid").html('')
             game_history('Game loss!')
             loser();
             $('#time').hide()
@@ -166,7 +193,7 @@ function begin() {
     $('#time').show()
     difficulty = $("#difficulty option:selected").val();
     var time = 60 * difficulty,
-        display = document.querySelector('#time');
+        display = $('#time')[0];
     startTimer(time, display);
 }
 
@@ -174,7 +201,7 @@ function begin() {
 function game_timeline() {
     $('#game_history').empty();
     $.ajax({
-        url: "http://localhost:5000/gamelog",
+        url: "https://bcit-pokedex.herokuapp.com/gamelog",
         type: "get",
         data: "",
         success: (r) => {
@@ -194,10 +221,13 @@ function setup() {
     game_timeline();
     $(document).on("click", "#start_game", function () {
         card = ''
-        loadImages();
         grid = $("#grid_size option:selected").val()
         number = $('#number').val();
+        loadImages();
         begin();
+        var audio = $("audio")[0];
+        audio.volume = 0.1;
+        audio.play();
 
     })
     $("body").on("click", ".card", game)

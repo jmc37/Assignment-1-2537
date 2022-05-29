@@ -2,11 +2,11 @@
    function login() {
     $.ajax({
       type: "get",
-      url: `http://localhost:5000/login/${document.getElementById("uname").value}/${document.getElementById("psw").value}`,
+      url: `https://bcit-pokedex.herokuapp.com/login/${document.getElementById("uname").value}/${document.getElementById("psw").value}`,
       success: function (data){
         console.log(data);
         if (data) {
-          window.location.href = 'http://localhost:5000/';
+          window.location.href = 'https://bcit-pokedex.herokuapp.com/';
         } else {
           $("#login").append(`<br><div class="alertfailure">
           <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
@@ -20,7 +20,7 @@
   function signup() {
     $.ajax({
       type: "put",
-      url: `http://localhost:5000/create/${document.getElementById("uname").value}/${document.getElementById("psw").value}`,
+      url: `https://bcit-pokedex.herokuapp.com/create/${document.getElementById("uname").value}/${document.getElementById("psw").value}`,
       success: function (x){
         if (x) {
           console.log(x);

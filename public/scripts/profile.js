@@ -6,7 +6,7 @@ user_id = null
 function get_user() {
   $('#purchase_timeline').empty();
   $.ajax({
-    "url": 'http://localhost:5000/userinfo/',
+    "url": 'https://bcit-pokedex.herokuapp.com/userinfo/',
     "type": "GET",
     success: (r) => {
       user_id = r[0]._id
@@ -33,7 +33,7 @@ function get_user() {
         $('#purchase_timeline').append(`Total $${total.toFixed(2)}`)
       }
       if (r[0].admin) {
-        $('#admin').show();
+        $('#hide').show();
         $('#create_users').show();
         admin()
       }
@@ -48,7 +48,7 @@ function admin() {
   $('#admin').empty();
   console.log('called')
   $.ajax({
-    "url": 'http://localhost:5000/admin/',
+    "url": 'https://bcit-pokedex.herokuapp.com/admin/',
     "type": "GET",
     success: (users) => {
       console.log(users.length)
@@ -77,7 +77,7 @@ function deleteID() {
     alert("Can't delete your own account")
   } else {
     $.ajax({
-      url: `http://localhost:5000/user/delete/${x}`,
+      url: `https://bcit-pokedex.herokuapp.com/user/delete/${x}`,
       type: "get",
       success: function (x) {
         alert("account deleted")
@@ -94,7 +94,7 @@ function editID() {
     alert("Can't edit your own account")
   } else {
     $.ajax({
-      url: `http://localhost:5000/user/edit/${document.getElementById("uname").value}/${document.getElementById("psw").value}/${x}`,
+      url: `https://bcit-pokedex.herokuapp.com/user/edit/${document.getElementById("uname").value}/${document.getElementById("psw").value}/${x}`,
       type: "get",
       success: function (x) {
         alert('change succesful')
@@ -111,7 +111,7 @@ function makeAdmin() {
     alert("Can't edit your own account")
   } else {
     $.ajax({
-      url: `http://localhost:5000/user/makeAdmin/${document.getElementById("uname").value}/${document.getElementById("psw").value}/${x}`,
+      url: `https://bcit-pokedex.herokuapp.com/user/makeAdmin/${document.getElementById("uname").value}/${document.getElementById("psw").value}/${x}`,
       type: "get",
       success: function (x) {
         alert('Made an admin')
@@ -125,10 +125,10 @@ function logout() {
   console.log('called')
   $.ajax({
     type: "get",
-    url: 'http://localhost:5000/logout',
+    url: 'https://bcit-pokedex.herokuapp.com/logout',
     success: function (x) {
       console.log(x);
-      window.location.href = 'http://localhost:5000/';
+      window.location.href = 'https://bcit-pokedex.herokuapp.com/';
     }
   })
 }
@@ -139,7 +139,7 @@ function signup() {
     console.log("admin function called")
     $.ajax({
       type: "put",
-      url: `http://localhost:5000/admin/${document.getElementById("uname").value}/${document.getElementById("psw").value}`,
+      url: `https://bcit-pokedex.herokuapp.com/admin/${document.getElementById("uname").value}/${document.getElementById("psw").value}`,
       success: function (x) {
         if (x) {
           admin();
@@ -159,7 +159,7 @@ function signup() {
   } else {
     $.ajax({
       type: "put",
-      url: `http://localhost:5000/create/${document.getElementById("uname").value}/${document.getElementById("psw").value}`,
+      url: `https://bcit-pokedex.herokuapp.com/create/${document.getElementById("uname").value}/${document.getElementById("psw").value}`,
       success: function (x) {
         if (x) {
           admin();
@@ -180,7 +180,7 @@ function signup() {
 }
 
 function setup() {
-  $('#admin').hide();
+  $('#hide').hide();
   $('#create_users').hide();
   get_user();
   $("body").on("click", ".deleteButtons", deleteID)
