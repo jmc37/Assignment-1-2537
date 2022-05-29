@@ -199,7 +199,7 @@ function begin() {
 
 
 function game_timeline() {
-    $('#game_history').empty();
+    $('#game_history').html('');
     $.ajax({
         url: "https://bcit-pokedex.herokuapp.com/gamelog",
         type: "get",
