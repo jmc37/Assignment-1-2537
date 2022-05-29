@@ -97,7 +97,7 @@ async function loadImages() {
     for (d = 0; d < number; d++) { // three times
         pokemon_number = Math.floor(Math.random() * 898) + 1;
         await $.ajax({
-            "url": `https://bcit-pokedex.herokuapp.com/${pokemon_number}/`,
+            "url": `https://pokeapi.co/api/v2/pokemon/${pokemon_number}/`,
             "type": "GET",
             "success": add_img
         })
